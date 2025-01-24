@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es2020", // Or your preferred target
+    "module": "commonjs", // Or "esnext" if you're using a module bundler
+    "outDir": "./dist",
+    "declaration": true, // This is crucial for generating .d.ts files
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declarationDir": "./dist" // Output .d.ts into dist folder
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

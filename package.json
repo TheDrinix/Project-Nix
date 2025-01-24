@@ -1,0 +1,23 @@
+{
+  "name": "project-nix-v3",
+  "private": true,
+  "scripts": {
+    "shared:build": "pnpm --filter shared build",
+    "dashboard:dev": "pnpm shared:build && pnpm --filter dashboard dev",
+    "dashboard:build": "pnpm shared:build && pnpm --filter dashboard build",
+    "bot:dev": "pnpm shared:build && pnpm --filter bot dev",
+    "bot:build": "pnpm shared:build && pnpm --filter bot build",
+    "predev": "pnpm shared:build",
+    "prebuild": "pnpm shared:build",
+    "dev": "concurrently \"pnpm --filter dashboard dev\" \"pnpm --filter bot dev\"",
+    "build": "pnpm shared:build && pnpm dashboard:build && pnpm bot:build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@9.1.2+sha512.127dc83b9ea10c32be65d22a8efb4a65fb952e8fefbdfded39bdc3c97efc32d31b48b00420df2c1187ace28c921c902f0cb5a134a4d032b8b5295cbfa2c681e2",
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "prettier": "^3.4.2"
+  }
+}
