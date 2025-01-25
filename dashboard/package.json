@@ -10,7 +10,10 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@prisma/client": "^6.2.1",
+    "@prisma/nuxt": "^0.3.0",
     "nuxt": "^3.15.2",
+    "nuxt-auth-utils": "0.5.9",
     "vue": "latest",
     "vue-router": "latest"
   }
