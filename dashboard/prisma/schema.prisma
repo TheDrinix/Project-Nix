@@ -10,18 +10,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+model Guild {
+  id      String  @id
+  name    String
+  lobbies Lobby[]
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+model Lobby {
+  id                        String                     @id
+  entryPointId              String                     @unique
+  isPrivate                 Boolean                    @default(false)
+  waitingRoomId             String?                    @unique
+  namingScheme              String
+  allowPersonalizedNaming   Boolean                    @default(false)
+  PersonalizedNamingSchemes PersonalizedNamingScheme[]
+  protectedChannelIds       String[]
+  guild                     Guild                      @relation(fields: [guildId], references: [id])
+  guildId                   String
+
+  @@index([entryPointId])
+  @@index([waitingRoomId])
+}
+
+model PersonalizedNamingScheme {
+  pattern  String
+  memberId String
+  lobby    Lobby  @relation(fields: [lobbyId], references: [id])
+  lobbyId  String
+
+  @@id([lobbyId, memberId])
 }
