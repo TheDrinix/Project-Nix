@@ -13,6 +13,7 @@ datasource db {
 model Guild {
   id      String  @id
   name    String
+  PNRole  String?
   lobbies Lobby[]
 }
 

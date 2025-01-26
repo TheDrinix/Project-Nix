@@ -1,5 +1,5 @@
 export default defineEventHandler(async event => {
-  if (!event.path.startsWith('/api')) return;
+  /*if (!event.path.startsWith('/api')) return;
 
   const unauthorized = createError({
     statusCode: 401,
@@ -13,5 +13,5 @@ export default defineEventHandler(async event => {
   const [tokenType, token] = authHeader.split(' ');
   const config = useRuntimeConfig();
 
-  if (tokenType.toLowerCase() != 'bot' || token != config.apiKey) throw unauthorized;
+  if (tokenType.toLowerCase() != 'bot' || token != config.apiKey) throw unauthorized;*/
 })
