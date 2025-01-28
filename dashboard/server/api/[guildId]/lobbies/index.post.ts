@@ -7,7 +7,8 @@ const lobbySchema = z.object({
   guildId: z.string(),
   waitingRoomId: z.string().optional(),
   allowPersonalizedNaming: z.boolean(),
-  namingScheme: z.string().min(3).max(50)
+  namingScheme: z.string().min(3).max(50),
+  protectedChannelIds: z.array(z.string())
 });
 
 export default defineEventHandler(async event => {
@@ -36,10 +37,18 @@ export default defineEventHandler(async event => {
     });
   }
 
-  const { lobbyId, entrypointId, waitingRoomId, allowPersonalizedNaming, namingScheme } = res.data;
+  const { lobbyId, entrypointId, waitingRoomId, allowPersonalizedNaming, namingScheme, protectedChannelIds } = res.data;
 
-  const protectedChannelIds = [entrypointId];
-  if (!!waitingRoomId) protectedChannelIds.push(waitingRoomId); 
+  if (await prisma.lobby.findFirst({
+    where: {
+      id: lobbyId
+    }
+  })) {
+    throw createError({
+      statusCode: 409,
+      statusMessage: 'Lobby already exists'
+    });
+  }
 
   return prisma.lobby.create({
     data: {

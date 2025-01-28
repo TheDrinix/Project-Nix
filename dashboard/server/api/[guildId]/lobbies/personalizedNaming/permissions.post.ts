@@ -2,7 +2,7 @@ import prisma from "~/lib/prisma";
 import { z } from "zod";
 
 const permissionsSchema = z.object({
-  userId: z.string().optional()
+  roleId: z.string().optional()
 });
 
 export default defineEventHandler(async event => {
@@ -29,14 +29,14 @@ export default defineEventHandler(async event => {
     });
   }
 
-  const { userId } = res.data;
+  const { roleId } = res.data;
 
   prisma.guild.update({
     where: {
       id: guildId
     },
     data: {
-      PNRole: userId
+      PNRole: roleId
     }
   });
 })

@@ -16,5 +16,7 @@ export default defineEventHandler(async event => {
     });
   }
 
-  return guild.PNRole;
+  return {
+    roleId: guild.PNRole
+  };
 });

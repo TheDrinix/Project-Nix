@@ -22,7 +22,7 @@ export default defineEventHandler(async event => {
   const lobby = await prisma.lobby.findFirst({
     where: {
       guildId: guildId,
-      entryPointId: lobbyId
+      id: lobbyId
     }
   });
 
@@ -35,7 +35,7 @@ export default defineEventHandler(async event => {
 
   if (!lobby.allowPersonalizedNaming) {
     throw createError({
-      statusCode: 400,
+      statusCode: 403,
       statusMessage: 'Personalized naming is not allowed in this lobby'
     });
   }

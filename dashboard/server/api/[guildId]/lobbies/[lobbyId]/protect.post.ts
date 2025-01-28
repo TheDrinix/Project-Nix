@@ -3,26 +3,11 @@ import {z} from 'zod';
 
 const protectSchema = z.object({
   channelId: z.string(),
-  categoryId: z.string(),
 });
 
 export default defineEventHandler(async event => {
   const guildId = getRouterParam(event, 'guildId');
   const lobbyId = getRouterParam(event, 'lobbyId');
-
-  const lobby = await prisma.lobby.findFirst({
-    where: {
-      guildId: guildId,
-      entryPointId: lobbyId
-    }
-  });
-
-  if (!lobby) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Lobby not Found'
-    });
-  }
 
   const res = await readValidatedBody(event, b => protectSchema.safeParse(b));
 
@@ -34,23 +19,38 @@ export default defineEventHandler(async event => {
     });
   }
 
-  const { channelId, categoryId } = res.data;
+  const { channelId } = res.data;
 
-  if (lobby.id !== categoryId) {
+  const lobby = await prisma.lobby.findFirst({
+    where: {
+      guildId: guildId,
+      id: lobbyId
+    }
+  });
+
+  if (!lobby) {
     throw createError({
-      statusCode: 400,
-      statusMessage: 'The channel is not within a lobby'
+      statusCode: 404,
+      statusMessage: 'Lobby not Found'
+    });
+  }
+
+  if (channelId === lobby.entryPointId || channelId === lobby.waitingRoomId) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'Cannot remove protection from entry point or waiting room'
     });
   }
 
   const protectedChannelIds = lobby.protectedChannelIds;
-  if (protectedChannelIds.includes(channelId)) {
+  const isProtected = !protectedChannelIds.includes(channelId)
+  if (!isProtected) {
     protectedChannelIds.filter(id => id !== channelId);
   } else {
     protectedChannelIds.push(channelId);
   }
 
-  return prisma.lobby.update({
+  const updatedLobby = await prisma.lobby.update({
     where: {
       id: lobby.id
     },
@@ -60,4 +60,10 @@ export default defineEventHandler(async event => {
       }
     }
   });
+
+  return {
+    lobby: updatedLobby,
+    isProtected,
+    channelId
+  }
 });
