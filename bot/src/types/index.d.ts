@@ -3,6 +3,7 @@ import {
   Collection,
   Events,
   SlashCommandBuilder,
+  SlashCommandOptionsOnlyBuilder,
   SlashCommandSubcommandBuilder,
   SlashCommandSubcommandGroupBuilder,
 } from 'discord.js';
@@ -20,6 +21,7 @@ interface Cmd {
 }
 
 interface ExecutableCommand extends Cmd {
+  builder: SlashCommandOptionsOnlyBuilder;
   execute: execFunc;
 }
 
