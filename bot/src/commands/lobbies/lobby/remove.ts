@@ -4,6 +4,7 @@ import {
   ChannelType,
   EmbedBuilder,
   VoiceChannel,
+  MessageFlags,
 } from 'discord.js';
 import { ApiError, ApiErrorType } from 'src/errors/api';
 import { Subcommand } from 'src/types';
@@ -32,7 +33,7 @@ const command: Subcommand = {
         .setDescription(`Please enter a valid voice channel`)
         .setTimestamp();
 
-      await interaction.reply({ embeds: [embed], ephemeral: true });
+      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -43,7 +44,7 @@ const command: Subcommand = {
         .setDescription(`Selected channel is not part of a lobby`)
         .setTimestamp();
 
-      await interaction.reply({ embeds: [embed], ephemeral: true });
+      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -57,7 +58,7 @@ const command: Subcommand = {
           .setDescription(`Selected channel is not entrypoint of a lobby`)
           .setTimestamp();
 
-        await interaction.reply({ embeds: [embed], ephemeral: true });
+        await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       } else {
         const embed = new EmbedBuilder()
           .setColor(0xff0000)
@@ -65,7 +66,7 @@ const command: Subcommand = {
           .setDescription(`An unknown error occurred, please try again later`)
           .setTimestamp();
 
-        await interaction.reply({ embeds: [embed], ephemeral: true });
+        await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       }
 
       return;
@@ -79,7 +80,7 @@ const command: Subcommand = {
       )
       .setTimestamp();
 
-    await interaction.reply({ embeds: [embed], ephemeral: true });
+    await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
   },
 };
 

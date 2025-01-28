@@ -4,6 +4,7 @@ import {
   EmbedBuilder,
   PermissionFlagsBits,
   Role,
+  MessageFlags,
 } from 'discord.js';
 import { ApiError } from 'src/errors/api';
 import { Subcommand } from 'src/types';
@@ -39,7 +40,7 @@ const command: Subcommand = {
         .setDescription('An unknown error occurred, please try again later!') 
         .setTimestamp();
 
-      await interaction.reply({ embeds: [embed], ephemeral: true });
+      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -51,7 +52,7 @@ const command: Subcommand = {
       )
       .setTimestamp();
 
-    await interaction.reply({ embeds: [embed], ephemeral: true });
+    await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
   },
 };
 

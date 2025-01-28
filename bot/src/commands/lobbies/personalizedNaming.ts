@@ -5,6 +5,7 @@ import {
   EmbedBuilder,
   VoiceChannel,
   InteractionContextType,
+  MessageFlags,
 } from 'discord.js';
 import { ApiError, ApiErrorType } from 'src/errors/api';
 import { Command } from 'src/types';
@@ -35,6 +36,7 @@ const command: Command = {
     })
     .setContexts([InteractionContextType.Guild]),
   execute: async (interaction: CommandInteraction) => {
+    const startTime = Date.now();
     if (!interaction.guildId) return;
     const channel = interaction.options.get('channel')?.channel;
     const namingScheme = interaction.options.get('naming_scheme')?.value as string | undefined;
@@ -54,7 +56,7 @@ const command: Command = {
         .setDescription('An unknown error occurred, please try again later!')
         .setTimestamp();
 
-      await interaction.reply({ embeds: [embed], ephemeral: true });
+      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -71,11 +73,12 @@ const command: Command = {
           )
           .setTimestamp();
 
-        await interaction.reply({ embeds: [embed], ephemeral: true });
+        await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         return;
       }
     }
 
+    let apiCallTine = Date.now();
     try {
       await api.setPersonalizedNamingScheme(interaction.guildId, channel.id, interaction.user.id, namingScheme);
     } catch(e) {
@@ -109,7 +112,7 @@ const command: Command = {
             break;
         }
 
-        await interaction.reply({ embeds: [embed], ephemeral: true });
+        await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         return;
       } else {
         const embed = new EmbedBuilder()
@@ -118,7 +121,7 @@ const command: Command = {
           .setDescription('An unknown error occurred, please try again later!')
           .setTimestamp();
 
-        await interaction.reply({ embeds: [embed], ephemeral: true });
+        await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         return;
       }
     }
@@ -143,6 +146,8 @@ const command: Command = {
         `Personalized naming scheme updated for <#${channel.id}>`
       )
       .setTimestamp();
+
+    const endTime = Date.now();
 
     await interaction.reply({ embeds: [embed] });
     return;

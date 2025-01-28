@@ -4,6 +4,7 @@ import {
   EmbedBuilder,
   VoiceChannel,
   InteractionContextType,
+  MessageFlags,
 } from 'discord.js';
 import { ApiError, ApiErrorType } from 'src/errors/api';
 import { Command } from 'src/types';
@@ -40,7 +41,7 @@ const command: Command = {
         .setDescription(`Enter a valid channel code!`)
         .setTimestamp();
 
-      await interaction.reply({ embeds: [embed], ephemeral: true });
+      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -49,7 +50,7 @@ const command: Command = {
     let lobby: Lobby;
     try {
       lobby = await api.getLobbyByLobbyId(channel.guild.id, channel.parentId);
-    } catch (e) {
+    } catch (e: any) {
       if (e instanceof ApiError && e.type === ApiErrorType.LobbyNotFound) {
         const embed = new EmbedBuilder()
           .setColor(0xff0000)
@@ -57,7 +58,7 @@ const command: Command = {
           .setDescription(`Enter a valid channel code!`)
           .setTimestamp();
 
-        await interaction.reply({ embeds: [embed], ephemeral: true });
+        await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         return;
       }
 
@@ -67,7 +68,7 @@ const command: Command = {
         .setDescription(`An unknown error occurred, please try again later!`)
         .setTimestamp();
 
-      await interaction.reply({ embeds: [embed], ephemeral: true });
+      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -78,7 +79,7 @@ const command: Command = {
         .setDescription(`You have to be in a voice room within the same guild as the channel you're trying to join!`)
         .setTimestamp();
 
-      await interaction.reply({ embeds: [embed], ephemeral: true });
+      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -92,7 +93,7 @@ const command: Command = {
       .setDescription(`You've been joined to <#${channel.id}>`)
       .setTimestamp();
 
-    await interaction.reply({ embeds: [embed], ephemeral: true });
+    await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
   },
 };
 

@@ -1,4 +1,4 @@
-import { CacheType, Events, Interaction } from 'discord.js';
+import { CacheType, Events, Interaction, MessageFlags } from 'discord.js';
 import {
   Command,
   Event,
@@ -76,12 +76,12 @@ const event: Event = {
       if (interaction.replied || interaction.deferred) {
         await interaction.followUp({
           content: 'There was an error while executing this command!',
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         });
       } else {
         await interaction.reply({
           content: 'There was an error while executing this command!',
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         });
       }
     }

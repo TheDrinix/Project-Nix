@@ -2,6 +2,7 @@ import {
   ChannelType,
   CommandInteraction,
   EmbedBuilder,
+  MessageFlags,
   SlashCommandSubcommandBuilder,
   VoiceChannel,
 } from 'discord.js';
@@ -35,7 +36,7 @@ const command: Subcommand = {
         .setDescription(`Please enter a valid voice channel`)
         .setTimestamp();
 
-      await interaction.reply({ embeds: [embed], ephemeral: true });
+      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -46,7 +47,7 @@ const command: Subcommand = {
         .setDescription(`Channel is not part of a lobby channel category.`)
         .setTimestamp();
 
-      await interaction.reply({ embeds: [embed], ephemeral: true });
+      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -61,7 +62,7 @@ const command: Subcommand = {
           .setDescription(e.message)
           .setTimestamp();
 
-        await interaction.reply({ embeds: [embed], ephemeral: true });
+        await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       } else {
         const embed = new EmbedBuilder()
           .setColor(0xff0000)
@@ -69,7 +70,7 @@ const command: Subcommand = {
           .setDescription(`An unknown error occurred, please try again later.`)
           .setTimestamp();
 
-        await interaction.reply({ embeds: [embed], ephemeral: true });
+        await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       }
 
       return;
@@ -84,7 +85,7 @@ const command: Subcommand = {
         )
         .setTimestamp();
 
-      await interaction.reply({ embeds: [embed], ephemeral: true });
+      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
     } else {
       const embed = new EmbedBuilder()
         .setColor(0x5d00ff)
@@ -94,7 +95,7 @@ const command: Subcommand = {
         )
         .setTimestamp();
 
-      await interaction.reply({ embeds: [embed], ephemeral: true });
+      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
     }
   },
 };

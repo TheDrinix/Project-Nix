@@ -4,6 +4,7 @@ import {
   ChannelType,
   EmbedBuilder,
   VoiceChannel,
+  MessageFlags,
 } from 'discord.js';
 import { ApiError, ApiErrorType } from 'src/errors/api';
 import { Subcommand } from 'src/types';
@@ -74,7 +75,7 @@ const command: Subcommand = {
         )
         .setTimestamp();
 
-      await interaction.reply({ embeds: [embed], ephemeral: true });
+      await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -101,7 +102,7 @@ const command: Subcommand = {
           )
           .setTimestamp();
 
-        await interaction.reply({ embeds: [embed], ephemeral: true });
+        await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         return;
       }
 
@@ -120,7 +121,7 @@ const command: Subcommand = {
             )
             .setTimestamp();
 
-          await interaction.reply({ embeds: [embed], ephemeral: true });
+          await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
           return;
       } else {
         console.error(e);
@@ -132,7 +133,7 @@ const command: Subcommand = {
           )
           .setTimestamp();
 
-        await interaction.reply({ embeds: [embed], ephemeral: true });
+        await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
       }
     }
 
@@ -144,7 +145,7 @@ const command: Subcommand = {
       )
       .setTimestamp();
 
-    await interaction.reply({ embeds: [embed], ephemeral: true });
+    await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
   },
 };
 
