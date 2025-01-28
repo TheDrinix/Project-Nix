@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon -e ts,js,json ./src/main.ts"
+    "dev": "nodemon -e ts,js,json ./src/main.ts",
+    "deploy-commands": "ts-node ./src/deploy-commands.ts"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +21,7 @@
     "@types/crypto-js": "^4.2.2",
     "@types/node": "^22.10.10",
     "nodemon": "^3.1.9",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0"
   }
 }

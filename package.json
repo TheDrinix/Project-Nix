@@ -7,6 +7,7 @@
     "dashboard:build": "pnpm shared:build && pnpm --filter dashboard build",
     "bot:dev": "pnpm shared:build && pnpm --filter bot dev",
     "bot:build": "pnpm shared:build && pnpm --filter bot build",
+    "bot:deploy-commands": "pnpm shared:build && pnpm --filter bot deploy-commands",
     "predev": "pnpm shared:build",
     "prebuild": "pnpm shared:build",
     "dev": "concurrently \"pnpm --filter dashboard dev\" \"pnpm --filter bot dev\"",
