@@ -39,9 +39,13 @@ class ApiService {
     }
   }
 
-  async getLobbyByLobbyId(guildId: string, lobbyId: string) {
+  async getLobbyByLobbyId(guildId: string, lobbyId: string, userId?: string) {
     try {
-      const res = await this._http.get<Lobby>(`/${guildId}/lobbies/${lobbyId}`);
+      const query = userId ? { userId } : {};
+
+      const res = await this._http.get<Lobby>(`/${guildId}/lobbies/${lobbyId}`, {
+        params: query
+      });
 
       return res.data;
     } catch(e) {
