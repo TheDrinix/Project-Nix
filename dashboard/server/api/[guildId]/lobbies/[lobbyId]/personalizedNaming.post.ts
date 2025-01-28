@@ -22,7 +22,7 @@ export default defineEventHandler(async event => {
   const lobby = await prisma.lobby.findFirst({
     where: {
       guildId: guildId,
-      id: lobbyId
+      entryPointId: lobbyId
     }
   });
 
