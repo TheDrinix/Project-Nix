@@ -11,7 +11,7 @@ import {
 } from '../types';
 
 export async function loadCommands(commands: Collection<string, Command>) {
-  const foldersPath = path.join(__dirname, 'commands');
+  const foldersPath = path.join(__dirname, '..', 'commands');
   const commandFolders = fs.readdirSync(foldersPath);
 
   for (let folder of commandFolders) {
@@ -139,7 +139,7 @@ export async function loadEvents(client: Client) {
     (val) => typeof val === 'string'
   );
 
-  const eventsPath = path.join(__dirname, 'events');
+  const eventsPath = path.join(__dirname, '..', 'events');
   const eventDirs = fs
     .readdirSync(eventsPath, { withFileTypes: true })
     .filter((f) => f.isDirectory())
