@@ -35,5 +35,18 @@ export default defineEventHandler(async event => {
     });
   }
 
+  if (query.userId && typeof query.userId === 'string') {
+    const personalizedNaming = await prisma.personalizedNamingScheme.findFirst({
+      where: {
+        lobbyId: lobby.id,
+        memberId: query.userId
+      }
+    });
+
+    if (personalizedNaming) {
+      lobby.namingScheme = personalizedNaming.pattern;
+    }
+  }
+
   return lobby;
 });
