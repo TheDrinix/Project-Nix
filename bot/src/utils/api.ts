@@ -1,6 +1,6 @@
 import { Guild } from "discord.js";
 import { getHttpInstance } from "./http";
-import { CreateLobbyData, Lobby, ProtectChannelResponse } from "../types/api";
+import { CreateLobbyData, Lobby, ProtectChannelResponse, WatchThreadResponse, WatchedThread } from "../types/api";
 import { isAxiosError } from "axios";
 import { ApiError, ApiErrorType } from "src/errors/api";
 
@@ -208,6 +208,41 @@ class ApiService {
             throw new ApiError(ApiErrorType.ForbiddenAction);
           case 404:
             throw new ApiError(ApiErrorType.LobbyNotFound);
+          default:
+            console.error(e);
+            throw new Error('An unknown error occurred');
+        }
+      } else {
+        console.error(e);
+        throw new Error('An unknown error occurred');
+      }
+    }
+  }
+
+  async getWatchedThreads(guildId: string) {
+    try {
+      const res = await this._http.get<WatchedThread[]>(`/${guildId}/threads`);
+
+      return res.data;
+    } catch(e) {
+      console.error(e);
+
+      return [];
+    }
+  }
+
+  async watchThread(guildId: string, channelId: string, parentId: string) {
+    try {
+      const res = await this._http.post<WatchThreadResponse>(`/${guildId}/threads`, { channelId, parentId });
+
+      return res.data;
+    } catch(e) {
+      if (isAxiosError(e)) {
+        switch(e.status) {
+          case 400:
+            throw new ApiError(ApiErrorType.InvalidRequestBody);
+          case 404:
+            throw new ApiError(ApiErrorType.GuildNotFound);
           default:
             console.error(e);
             throw new Error('An unknown error occurred');

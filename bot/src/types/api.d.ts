@@ -24,3 +24,14 @@ export interface ProtectChannelResponse {
   isProtected: boolean;
   channelId: string;
 }
+
+export interface WatchedThread {
+  id: string;
+  guildId: string;
+  parentId: string;
+}
+
+export interface WatchThreadResponse {
+  watchedThread: WatchedThread;
+  isWatched: boolean;
+}
