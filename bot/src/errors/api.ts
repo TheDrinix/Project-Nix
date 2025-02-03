@@ -5,7 +5,8 @@ export enum ApiErrorType {
   LobbyAlreadyExists,
   ChannelNotInLobby,
   CannotRemoveProtection,
-  ForbiddenAction
+  ForbiddenAction,
+  ThreadNotFound,
 }
 
 export class ApiError extends Error {
@@ -33,6 +34,9 @@ export class ApiError extends Error {
           break;
         case ApiErrorType.ForbiddenAction:
           message = 'Forbidden action';
+          break;
+        case ApiErrorType.ThreadNotFound:
+          message = 'Thread not found';
           break;
         default:
           message = 'An error occurred';

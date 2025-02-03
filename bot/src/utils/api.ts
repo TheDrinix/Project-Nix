@@ -253,6 +253,36 @@ class ApiService {
       }
     }
   }
+
+  async getWatchedThread(guildId: string, threadId: string) {
+    try {
+      const res = await this._http.get<WatchedThread>(`/${guildId}/threads/${threadId}`);
+
+      return res.data;
+    } catch(e) {
+      if (isAxiosError(e)) {
+        switch(e.status) {
+          case 404:
+            throw new ApiError(ApiErrorType.ThreadNotFound);
+          default:
+            console.error(e);
+            throw new Error('An unknown error occurred');
+        }
+      } else {
+        console.error(e);
+        throw new Error('An unknown error occurred');
+      }
+    }
+  }
+
+  async removeWatchedThread(guildId: string, threadId: string) {
+    try {
+      await this._http.delete(`/${guildId}/threads/${threadId}`);
+    } catch(e) {
+      console.error(e);
+      throw new Error('An unknown error occurred');
+    }
+  }
 }
 
 const apiServiceSingleton = () => {

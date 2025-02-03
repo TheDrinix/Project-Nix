@@ -17,9 +17,6 @@
       "typeRoots": ["node_modules/@types"],
       "sourceMap": false,
       "baseUrl": "./",
-      "paths": {
-        "~": ["src/*"],
-      }
   },
   "files": ["src/main.ts"],
   "include": ["./src/**/*.ts"],
