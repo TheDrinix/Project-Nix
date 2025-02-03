@@ -11,10 +11,11 @@ datasource db {
 }
 
 model Guild {
-  id      String  @id
-  name    String
-  PNRole  String?
-  lobbies Lobby[]
+  id             String          @id
+  name           String
+  PNRole         String?
+  lobbies        Lobby[]
+  watchedThreads WatchedThread[]
 }
 
 model Lobby {
@@ -40,4 +41,11 @@ model PersonalizedNamingScheme {
   lobbyId  String
 
   @@id([lobbyId, memberId])
+}
+
+model WatchedThread {
+  id       String @id
+  parentId String
+  guild    Guild  @relation(fields: [guildId], references: [id])
+  guildId  String
 }
