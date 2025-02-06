@@ -1,3 +1,16 @@
+declare module '#auth-utils' {
+  interface User {
+    discordId: string;
+  }
+
+  interface SecureSessionData {
+    discord: {
+      accessToken: string;
+      refreshToken: string;
+    };
+  }
+}
+
 export interface DiscordOAuthUser {
   id: string;
   username: string;

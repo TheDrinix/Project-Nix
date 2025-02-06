@@ -9,14 +9,19 @@ export default defineOAuthDiscordEventHandler({
   async onSuccess(event, { user, tokens }: DiscordOAuthData) {
     await setUserSession(event, {
       user: {
-        discordId: user.id,
-        discord_token: tokens.access_token        
+        discordId: user.id
+      },
+      secure: {
+        discord: {
+          accessToken: tokens.access_token,
+          refreshToken: tokens.refresh_token
+        }
       }
     }, {
       maxAge: tokens.expires_in
     });
 
-    return sendRedirect(event, '/');
+    return sendRedirect(event, '/guilds');
   },
   onError(event, error) {
     console.error("Discord OAuth error: ", error);
