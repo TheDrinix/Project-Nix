@@ -1,6 +1,8 @@
 declare module '#auth-utils' {
   interface User {
     discordId: string;
+    username: string;
+    avatar?: string;
   }
 
   interface SecureSessionData {
@@ -14,7 +16,7 @@ declare module '#auth-utils' {
 export interface DiscordOAuthUser {
   id: string;
   username: string;
-  avatar: string;
+  avatar?: string;
   discriminator: string;
   global_name: string;
   email: string;

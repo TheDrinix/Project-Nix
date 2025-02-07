@@ -9,7 +9,9 @@ export default defineOAuthDiscordEventHandler({
   async onSuccess(event, { user, tokens }: DiscordOAuthData) {
     await setUserSession(event, {
       user: {
-        discordId: user.id
+        discordId: user.id,
+        username: user.global_name ?? user.username,
+        avatar: user.avatar,
       },
       secure: {
         discord: {
