@@ -11,9 +11,6 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  console.log('Fetching guilds...');
-  console.log('Session:', session);
-
   try {
     const res = await $fetch<DiscordGuild[]>('https://discord.com/api/users/@me/guilds', {
       headers: {
@@ -25,8 +22,8 @@ export default defineEventHandler(async (event) => {
     const botGuildIds: Set<string> = new Set(botGuilds.map(guild => guild.id));
 
     return res
-      .filter(guild => botGuildIds.has(guild.id))
-      .filter(guild => guild.owner || ((guild.permissions & 8) === 8));
+      .filter(guild => guild.owner || ((guild.permissions & 8) === 8))
+      .filter(guild => botGuildIds.has(guild.id));
   } catch (e) {
     console.error(e);
 
