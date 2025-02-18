@@ -18,11 +18,22 @@ export default defineEventHandler(async (event) => {
       }
     })
 
-    const botGuilds = await prisma.guild.findMany();
+    const userGuilds = res.filter(guild => guild.owner || ((guild.permissions & 8) === 8));
+    const userGuildsIds = userGuilds.map(guild => guild.id);
+
+    const botGuilds = await prisma.guild.findMany({
+      where: {
+        id: {
+          in: userGuildsIds
+        },
+      },
+      select: {
+        id: true
+      }
+    });
     const botGuildIds: Set<string> = new Set(botGuilds.map(guild => guild.id));
 
     return res
-      .filter(guild => guild.owner || ((guild.permissions & 8) === 8))
       .filter(guild => botGuildIds.has(guild.id))
       .map(guild => ({
         id: guild.id,

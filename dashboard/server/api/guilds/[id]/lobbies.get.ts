@@ -12,11 +12,9 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const lobbies = await prisma.lobby.findMany({
+  return  prisma.lobby.findMany({
     where: {
       guildId
     }
   });
-
-  return lobbies;
 })
