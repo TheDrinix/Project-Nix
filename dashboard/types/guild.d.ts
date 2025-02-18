@@ -8,6 +8,7 @@ export interface Guild {
 
 export interface GuildStoreState {
   guilds: Map<string, Guild>;
+  hasBeenLoaded: boolean;
 }
 
 export interface ChannelStoreState {

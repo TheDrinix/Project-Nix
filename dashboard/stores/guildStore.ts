@@ -3,6 +3,7 @@ import type { Guild, GuildStoreState } from '~/types/guild';
 export const useGuildStore = defineStore('guilds', {
   state: (): GuildStoreState => ({
     guilds: new Map<string, Guild>(),
+    hasBeenLoaded: false
   }),
   getters: {
     getGuilds: (state) => Array.from(state.guilds.values()),
@@ -21,6 +22,7 @@ export const useGuildStore = defineStore('guilds', {
           this.guilds.set(guild.id, guild);
         }
 
+        this.hasBeenLoaded = true;
         return guilds;
       } catch (error) {
         console.error('Failed to fetch guilds:', error);
