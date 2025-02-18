@@ -1,6 +1,10 @@
 <template>
   <div>
     <Header />
-    <slot />
+    <main>
+      <UContainer>
+        <slot />
+      </UContainer>
+    </main>
   </div>
 </template>
