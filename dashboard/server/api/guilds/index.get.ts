@@ -23,7 +23,12 @@ export default defineEventHandler(async (event) => {
 
     return res
       .filter(guild => guild.owner || ((guild.permissions & 8) === 8))
-      .filter(guild => botGuildIds.has(guild.id));
+      .filter(guild => botGuildIds.has(guild.id))
+      .map(guild => ({
+        id: guild.id,
+        name: guild.name,
+        icon: guild.icon
+      }));
   } catch (e) {
     console.error(e);
 
