@@ -6,7 +6,9 @@ const event: Event = {
   name: 'loadGuilds',
   once: true,
   async execute() {
-    await api.loadGuilds();
+    setTimeout(async () => {
+      await api.loadGuilds();
+    }, 5 * 60 * 1000);
   }
 }
 
