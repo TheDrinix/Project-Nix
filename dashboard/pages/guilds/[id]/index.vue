@@ -3,7 +3,7 @@
 </script>
 
 <template>
-
+  <p>Amongus</p>
 </template>
 
 <style scoped>

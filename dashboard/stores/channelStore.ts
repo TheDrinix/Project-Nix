@@ -5,6 +5,19 @@ export const useChannelStore = defineStore('channels', {
   state: (): ChannelStoreState => ({
     guildsChannels: new Map<string, Map<string, DiscordChannel>>(),
   }),
+  getters: {
+    getChannelName: (state) => {
+      return (guildId: string, channelId: string) => {
+        if (!channelId.length) return 'Some unknown channel';
+
+        const channels = state.guildsChannels.get(guildId);
+        if (!channels) return 'Some unknown channel';
+
+        const channel = channels.get(channelId);
+        return channel?.name || 'Some unknown channel';
+      }
+    }
+  },
   actions: {
     async fetchChannels(guildId: string) {
       const guilds = await useRequestFetch()(`/api/guilds/${guildId}/channels`);

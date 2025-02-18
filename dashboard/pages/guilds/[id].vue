@@ -3,6 +3,10 @@ const route = useRoute();
 const guildStore = useGuildStore();
 const channelStore = useChannelStore();
 
+if (!guildStore.hasBeenLoaded) {
+  await callOnce(guildStore.fetchGuilds);
+}
+
 const guildId = computed(() => route.params.id as string);
 
 const guild = computed(() => {
@@ -10,10 +14,19 @@ const guild = computed(() => {
 });
 
 if (!guild.value) {
-  navigateTo('/guilds');
+  await navigateTo('/guilds'); // Redirect if guild is invalid
+} else {
+  await callOnce(() => channelStore.fetchChannels(guildId.value));
 }
 
-const s = useAsyncData(() => channelStore.fetchChannels(guildId.value));
+watch(guild, async (newGuild) => {
+  if (!newGuild) {
+    await navigateTo('/guilds'); // Redirect if guild is invalid
+  } else {
+    // Only fetch channels if the guild is valid
+    await callOnce(() => channelStore.fetchChannels(guildId.value));
+  }
+})
 
 const iconUrl = computed(() => {
   return guild.value?.icon ? `https://cdn.discordapp.com/icons/${guild.value?.id}/${guild.value?.icon}.png` : '';
