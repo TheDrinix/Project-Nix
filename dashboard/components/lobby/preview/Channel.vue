@@ -10,12 +10,9 @@ const props = defineProps<{
 }>();
 
 const channelsStore = useChannelStore();
-const route = useRoute();
-
-const guildId = computed(() => route.params.id as string);
 
 const channelName = computed(() => {
-  return props.channelName || channelsStore.getChannelName(guildId.value, props.channelId || '');
+  return props.channelName || channelsStore.getChannelName(props.channelId || '');
 })
 </script>
 

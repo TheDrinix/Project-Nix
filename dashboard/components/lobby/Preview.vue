@@ -3,17 +3,15 @@ const props = defineProps<{
   entryPointId: string;
   waitroomId: string | null;
   lobbyId: string;
+  guildId: string;
   namingScheme: string;
 }>();
 
 const channelsStore = useChannelStore();
-const route = useRoute();
 const { user } = useUserSession();
 
-const guildId = computed(() => route.params.id as string);
-
 const lobbyName = computed(() => {
-  return channelsStore.getChannelName(guildId.value, props.lobbyId);
+  return channelsStore.getChannelName(props.lobbyId);
 });
 
 const usersChannelName = computed(() => {

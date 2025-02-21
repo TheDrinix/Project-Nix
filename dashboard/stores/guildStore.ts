@@ -14,6 +14,7 @@ export const useGuildStore = defineStore('guilds', {
   actions: {
     async fetchGuilds() {
       try {
+        this.hasBeenLoaded = true;
         const guilds = await useRequestFetch()('/api/guilds')
 
         this.guilds.clear();
@@ -22,9 +23,9 @@ export const useGuildStore = defineStore('guilds', {
           this.guilds.set(guild.id, guild);
         }
 
-        this.hasBeenLoaded = true;
         return guilds;
       } catch (error) {
+        this.hasBeenLoaded = false;
         console.error('Failed to fetch guilds:', error);
 
         throw error;

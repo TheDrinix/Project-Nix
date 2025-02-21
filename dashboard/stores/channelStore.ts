@@ -3,35 +3,30 @@ import type { DiscordChannel } from '~/types/discord';
 
 export const useChannelStore = defineStore('channels', {
   state: (): ChannelStoreState => ({
-    guildsChannels: new Map<string, Map<string, DiscordChannel>>(),
+    channels: new Map<string, DiscordChannel>(),
   }),
   getters: {
     getChannelName: (state) => {
-      return (guildId: string, channelId: string) => {
-        if (!channelId.length) return 'Some unknown channel';
+      return (channelId: string) => {
+        const channel = state.channels.get(channelId);
 
-        const channels = state.guildsChannels.get(guildId);
-        if (!channels) return 'Some unknown channel';
-
-        const channel = channels.get(channelId);
         return channel?.name || 'Some unknown channel';
       }
     }
   },
   actions: {
     async fetchChannels(guildId: string) {
-      const guilds = await useRequestFetch()(`/api/guilds/${guildId}/channels`);
+      const res = await useRequestFetch()(`/api/guilds/${guildId}/channels`);
 
-      const channels: Map<string, DiscordChannel> = this.guildsChannels.get(guildId) || new Map<string, DiscordChannel>();
-      channels.clear();
+      const channels: Map<string, DiscordChannel> = this.channels || new Map<string, DiscordChannel>();
 
-      for (const channel of guilds) {
+      for (const channel of res) {
         channels.set(channel.id, channel);
       }
 
-      this.guildsChannels.set(guildId, channels);
+      this.channels = channels;
 
-      return channels;
+      return res;
     }
   }
 })

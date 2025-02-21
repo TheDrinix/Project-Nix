@@ -12,16 +12,5 @@ export interface GuildStoreState {
 }
 
 export interface ChannelStoreState {
-  guildsChannels: Map<string, Map<string, DiscordChannel>>;
-}
-
-export interface Lobby {
-  guildId: string;
-  id: string;
-  entryPointId: string;
-  isPrivate: boolean;
-  waitingRoomId: string | null;
-  namingScheme: string;
-  allowPersonalizedNaming: boolean;
-  protectedChannelIds: string[]
+  channels: Map<string, DiscordChannel>;
 }

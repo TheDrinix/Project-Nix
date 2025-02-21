@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const props = defineProps<{
-  guildId: string;
   channelId: string;
   type: 'text' | 'voice';
 }>();
@@ -8,7 +7,7 @@ const props = defineProps<{
 const channelsStore = useChannelStore();
 
 const channelName = computed(() => {
-  return channelsStore.getChannelName(props.guildId, props.channelId);
+  return channelsStore.getChannelName(props.channelId);
 });
 
 const icon = computed(() => {

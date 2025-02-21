@@ -11,15 +11,13 @@ interface Lobby {
 }
 const props = defineProps<Lobby>();
 
-const route = useRoute();
-const guildId = computed(() => route.params.id as string);
-
 const previewData = computed(() => {
   return {
     entryPointId: props.entryPointId,
     waitroomId: props.waitingRoomId,
     lobbyId: props.id,
-    namingScheme: props.namingScheme
+    namingScheme: props.namingScheme,
+    guildId: props.guildId
   }
 })
 </script>
@@ -36,11 +34,11 @@ const previewData = computed(() => {
       <p><span class="font-medium">Allows personalized naming:</span> {{allowPersonalizedNaming ? 'Yes' : 'No'}}</p>
       <div class="flex items-center mb-1">
         <span class="font-medium mr-1">Entrypoint channel:</span>
-        <ChannelTag :channel-id="entryPointId" :guild-id="guildId" :type="'voice'" />
+        <ChannelTag :channel-id="entryPointId" :type="'voice'" />
       </div>
       <div v-if="waitingRoomId" class="flex items-center">
         <span class="font-medium mr-1">Entrypoint channel:</span>
-        <ChannelTag :channel-id="waitingRoomId" :guild-id="guildId" :type="'voice'" />
+        <ChannelTag :channel-id="waitingRoomId" :type="'voice'" />
       </div>
     </div>
     <div class="w-full mt-auto flex justify-end">
