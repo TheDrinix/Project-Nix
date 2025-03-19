@@ -5,6 +5,17 @@ export const useLobbyStore = defineStore('lobbies', {
     lobbies: new Map<string, Lobby>(),
   }),
   getters: {
+    getLobby: (state) => {
+      return (lobbyId: string) => {
+        return state.lobbies.get(lobbyId);
+      }
+    },
+    getGuildLobbies: state => {
+      return (guildId: string) => {
+        return Array.from(state.lobbies.values())
+          .filter(lobby => lobby.guildId === guildId);
+      }
+    }
   },
   actions: {
     async fetchLobbies(guildId: string) {
@@ -18,6 +29,9 @@ export const useLobbyStore = defineStore('lobbies', {
       this.lobbies = lobbies;
 
       return res;
+    },
+    disableLobby(lobbyId: string) {
+      this.lobbies.delete(lobbyId);
     }
   }
 })
