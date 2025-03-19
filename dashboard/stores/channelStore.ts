@@ -1,5 +1,5 @@
 import type { ChannelStoreState } from '~/types/guild';
-import type { DiscordChannel } from '~/types/discord';
+import { type DiscordChannel } from '~/types/discord';
 
 export const useChannelStore = defineStore('channels', {
   state: (): ChannelStoreState => ({
@@ -11,6 +11,18 @@ export const useChannelStore = defineStore('channels', {
         const channel = state.channels.get(channelId);
 
         return channel?.name || 'Some unknown channel';
+      }
+    },
+    getGuildVoiceChannels: state => {
+      return (guildId: string) => {
+        return Array.from(state.channels.values())
+          .filter(channel => channel.type === 2 && channel.guild_id === guildId);
+        }
+    },
+    getLobbyChannels: state => {
+      return (lobbyId: string) => {
+        return Array.from(state.channels.values())
+          .filter(channel => channel.type === 2 && channel.parent_id === lobbyId);
       }
     }
   },
