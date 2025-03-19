@@ -11,6 +11,10 @@ const { data, status, error } = useLazyAsyncData(`lobbies`, () => {
 }, {
   watch: [guildId],
 });
+
+const lobbies = computed(() => {
+  return lobbyStore.getGuildLobbies(guildId.value);
+});
 </script>
 
 <template>
@@ -18,7 +22,7 @@ const { data, status, error } = useLazyAsyncData(`lobbies`, () => {
     <h3 class="text-lg font-medium">Lobbies</h3>
     <UDivider />
     <div v-if="status === 'success'" class="flex flex-col gap-2">
-      <Lobby v-for="lobby in data" v-bind="lobby" :key="lobby.id" />
+      <Lobby v-for="lobby in lobbies" v-bind="lobby" :key="lobby.id" />
     </div>
     <div v-else-if="status === 'pending'" class="flex flex-col gap-2">
       <USkeleton v-for="i in 3" :key="i" class="h-[13.5rem] w-full" />
