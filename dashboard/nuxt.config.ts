@@ -16,4 +16,9 @@ export default defineNuxtConfig({
     oauthDiscordClientSecret: '',
   },
   css: ['~/assets/css/main.css'],
+  app: {
+    head: {
+      title: 'Nix Dashboard'
+    }
+  }
 })
