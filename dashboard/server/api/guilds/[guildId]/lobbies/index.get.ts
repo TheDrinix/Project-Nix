@@ -1,9 +1,9 @@
 import prisma from '~/lib/prisma';
 
 export default defineEventHandler(async (event) => {
-  requireUserSession(event);
+  await requireUserSession(event);
 
-  const guildId = getRouterParam(event, 'id');
+  const guildId = getRouterParam(event, 'guildId');
 
   if (!guildId) {
     throw createError({

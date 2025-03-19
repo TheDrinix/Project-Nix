@@ -4,7 +4,7 @@ import { FetchError } from 'ofetch';
 export default defineEventHandler(async event => {
   const session = await requireUserSession(event);
 
-  const guildId = getRouterParam(event, 'id');
+  const guildId = getRouterParam(event, 'guildId');
   if (!guildId) {
     throw createError({
       message: 'Guild ID is required',
@@ -26,7 +26,7 @@ export default defineEventHandler(async event => {
     const channels = await $fetch<DiscordChannel[]>(`https://discord.com/api/guilds/${guildId}/channels`, {
       headers: {
         Authorization: `Bot ${botToken}`
-      }
+      },
     });
 
     return channels;

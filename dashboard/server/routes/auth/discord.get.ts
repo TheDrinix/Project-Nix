@@ -4,7 +4,7 @@ export default defineOAuthDiscordEventHandler({
   config: {
     emailRequired: true,
     profileRequired: true,
-    scope: ['identify', 'email', 'guilds']
+    scope: ['identify', 'email', 'guilds', 'guilds.members.read']
   },
   async onSuccess(event, { user, tokens }: DiscordOAuthData) {
     await setUserSession(event, {
