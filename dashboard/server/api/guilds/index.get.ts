@@ -1,5 +1,4 @@
 import prisma from '~/lib/prisma';
-import { DiscordGuild } from '~/types/discord';
 
 export default defineEventHandler(async (event) => {
   const session = await requireUserSession(event);
@@ -12,13 +11,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const res = await $fetch<DiscordGuild[]>('https://discord.com/api/users/@me/guilds', {
-      headers: {
-        Authorization: `Bearer ${session.secure.discord.accessToken}`
-      }
-    })
-
-    const userGuilds = res.filter(guild => guild.owner || ((guild.permissions & 8) === 8));
+    const userGuilds = await getUserGuilds(session.user.discordId, session.secure.discord.accessToken);
     const userGuildsIds = userGuilds.map(guild => guild.id);
 
     const botGuilds = await prisma.guild.findMany({
@@ -33,7 +26,7 @@ export default defineEventHandler(async (event) => {
     });
     const botGuildIds: Set<string> = new Set(botGuilds.map(guild => guild.id));
 
-    return res
+    return userGuilds
       .filter(guild => botGuildIds.has(guild.id))
       .map(guild => ({
         id: guild.id,
