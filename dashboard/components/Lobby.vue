@@ -11,6 +11,8 @@ interface Lobby {
 }
 const props = defineProps<Lobby>();
 
+const isDisableModalOpen = ref(false);
+
 const previewData = computed(() => {
   return {
     entryPointId: props.entryPointId,
@@ -43,10 +45,11 @@ const previewData = computed(() => {
     </div>
     <div class="w-full mt-auto flex justify-end">
       <UButtonGroup>
-        <UButton size="sm" color="yellow">Edit</UButton>
-        <UButton size="sm" color="red">Delete</UButton>
+        <UButton :to="`/guilds/${guildId}/lobbies/${id}/edit`" size="sm" color="yellow">Edit</UButton>
+        <UButton size="sm" color="red" @click="isDisableModalOpen = true">Disable</UButton>
       </UButtonGroup>
     </div>
+    <LobbyDisableModal v-model="isDisableModalOpen" :lobby-id="id" :guild-id="guildId" />
   </div>
 </UCard>
 </template>
