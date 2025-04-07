@@ -11,30 +11,39 @@ export default defineEventHandler(async event => {
       status: 500
     });
   }
-  
-  try {
-    const res = await $fetch<DiscordGuild[]>('https://discord.com/api/users/@me/guilds', {
-      headers: {
-        Authorization: `Bot ${botToken}`
-      }
-    });
 
-    const guilds = await prisma.$transaction(res.map(guild => { 
-      return prisma.guild.upsert({
-        where: {
-          id: guild.id
+  try {
+    let lastId = '';
+    while (true) {
+      const res = await $fetch<DiscordGuild[]>('https://discord.com/api/users/@me/guilds', {
+        headers: {
+          Authorization: `Bot ${botToken}`
         },
-        update: {
-          name: guild.name
-        },
-        create: {
-          id: guild.id,
-          name: guild.name
+        query: {
+          limit: 200,
+          after: lastId
         }
       });
-    }));
 
-    return guilds;
+      lastId = res[res.length - 1]?.id;
+
+      const guilds = await prisma.$transaction(res.map(guild => {
+        return prisma.guild.upsert({
+          where: {
+            id: guild.id
+          },
+          update: {
+            name: guild.name
+          },
+          create: {
+            id: guild.id,
+            name: guild.name
+          }
+        });
+      }));
+
+      if (res.length < 200) break;
+    }
   } catch (e) {
     throw createError({
       message: 'Failed to load guilds',
