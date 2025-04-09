@@ -16,6 +16,7 @@ model Guild {
   PNRole         String?
   lobbies        Lobby[]
   watchedThreads WatchedThread[]
+  announcements  AnnoucementsConfig?
 }
 
 model Lobby {
@@ -48,4 +49,13 @@ model WatchedThread {
   parentId String
   guild    Guild  @relation(fields: [guildId], references: [id])
   guildId  String
+}
+
+model AnnoucementsConfig {
+  guild         Guild   @relation(fields: [guildId], references: [id])
+  guildId       String  @unique @id
+  channelId     String
+  announceJoin  Boolean @default(true)
+  announceLeave Boolean @default(true)
+  announceBan   Boolean @default(false)
 }
