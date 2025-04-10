@@ -1,7 +1,17 @@
 <script setup lang="ts">
+import { FetchError } from 'ofetch';
+
+definePageMeta({
+  middleware: [
+    'auth'
+  ]
+})
+
 const guildStore = useGuildStore();
+const router = useRouter();
 
 await callOnce(guildStore.fetchGuilds);
+ 
 
 const guilds = computed(() => guildStore.getGuilds);
 </script>

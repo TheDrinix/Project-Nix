@@ -3,6 +3,12 @@ const route = useRoute();
 const guildStore = useGuildStore();
 const channelStore = useChannelStore();
 
+definePageMeta({
+  middleware: [
+    'auth'
+  ]
+})
+
 if (!guildStore.hasBeenLoaded) {
   await callOnce(guildStore.fetchGuilds);
 }
