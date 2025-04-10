@@ -11,4 +11,5 @@ export interface Lobby {
 
 export interface LobbyStoreState {
   lobbies: Map<string, Lobby>;
+  guildsLoadedAt: Map<string, Date>;
 }

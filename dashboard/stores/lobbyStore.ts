@@ -3,6 +3,7 @@ import type { Lobby, LobbyStoreState } from '~/types/lobby';
 export const useLobbyStore = defineStore('lobbies', {
   state: (): LobbyStoreState => ({
     lobbies: new Map<string, Lobby>(),
+    guildsLoadedAt: new Map<string, Date>(),
   }),
   getters: {
     getLobby: (state) => {
@@ -18,7 +19,16 @@ export const useLobbyStore = defineStore('lobbies', {
     }
   },
   actions: {
-    async fetchLobbies(guildId: string) {
+    async fetchLobbies(guildId: string, force = false) {
+      const hasBeenLoadedAt = this.guildsLoadedAt.get(guildId);
+      if (hasBeenLoadedAt && !force) {
+        const now = new Date();
+        const diff = now.getTime() - hasBeenLoadedAt.getTime();
+        if (diff < 1000 * 60 * 5) {
+          return this.getGuildLobbies(guildId);
+        }
+      }
+
       const res = await useRequestFetch()<Lobby[]>(`/api/guilds/${guildId}/lobbies`);
 
       const lobbies = this.lobbies;
@@ -27,6 +37,7 @@ export const useLobbyStore = defineStore('lobbies', {
       }
 
       this.lobbies = lobbies;
+      this.guildsLoadedAt.set(guildId, new Date());
 
       return res;
     },
