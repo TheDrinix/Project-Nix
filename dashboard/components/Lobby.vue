@@ -45,7 +45,7 @@ const previewData = computed(() => {
     </div>
     <div class="w-full mt-auto flex justify-end">
       <UButtonGroup>
-        <UButton :to="`/guilds/${guildId}/lobbies/${id}/edit`" size="sm" color="warning">Edit</UButton>
+        <UButton :to="{ name: 'guilds-id-lobbies-lobbyId-edit', params: { id: guildId, lobbyId: id } }" size="sm" color="warning">Edit</UButton>
         <UButton size="sm" color="error" @click="isDisableModalOpen = true">Disable</UButton>
       </UButtonGroup>
     </div>
