@@ -40,17 +40,12 @@ const iconUrl = computed(() => {
 
 const links = [
   {
-    label: 'Overview',
-    to: { name: 'guilds-id', params: { id: guildId.value } },
-    exact: true
-  },
-  {
     label: 'Lobbies',
-    to: { name: 'guilds-id-lobbies', params: { id: guildId.value } }
+    to: { name: 'guilds-id-lobbies', params: { id: guildId.value } },
   },
   {
-    label: 'Thread watcher',
-    to: { name: 'guilds-id-threads', params: { id: guildId.value } }
+    label: 'Announcements',
+    to: { name: 'guilds-id-announcements', params: { id: guildId.value } }
   }
 ]
 

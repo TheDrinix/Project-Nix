@@ -14,15 +14,21 @@ export const useChannelStore = defineStore('channels', {
       }
     },
     getGuildVoiceChannels: state => {
-      return (guildId: string) => {
+      return (guildId: string): DiscordChannel[] => {
         return Array.from(state.channels.values())
           .filter(channel => channel.type === 2 && channel.guild_id === guildId);
         }
     },
     getLobbyChannels: state => {
-      return (lobbyId: string) => {
+      return (lobbyId: string): DiscordChannel[] => {
         return Array.from(state.channels.values())
           .filter(channel => channel.type === 2 && channel.parent_id === lobbyId);
+      }
+    },
+    getGuildChannelCategories: state => {
+      return (guildId: string): DiscordChannel[] => {
+        return Array.from(state.channels.values())
+          .filter(channel => channel.type === 4 && channel.guild_id === guildId);
       }
     }
   },

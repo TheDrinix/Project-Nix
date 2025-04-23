@@ -19,7 +19,10 @@ const lobbies = computed(() => {
 
 <template>
   <div class="w-full">
-    <h3 class="text-lg font-medium">Lobbies</h3>
+    <div class="flex justify-between items-center">
+      <h3 class="text-lg font-medium">Lobbies</h3>
+      <UButton class="my-2" :to="{ name: 'guilds-id-lobbies-create', params: { id: guildId } }" size="sm">Create lobby</UButton>
+    </div>
     <UDivider />
     <div v-if="status === 'success'" class="flex flex-col gap-2">
       <Lobby v-for="lobby in lobbies" v-bind="lobby" :key="lobby.id" />
