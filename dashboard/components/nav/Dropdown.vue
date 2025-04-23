@@ -43,10 +43,10 @@ const items = computed(() => {
 
 <template>
   <UDropdownMenu :items>
-    <div class="flex items-center">
-      <span class="mr-4 font-medium">{{username}}</span>
+    <UButton variant="ghost" color="neutral" class="cursor-pointer">
+      <span class="mr-2 font-medium">{{username}}</span>
       <UAvatar :src="avatarUrl" />
-    </div>
+    </UButton>
   </UDropdownMenu>
 </template>
 

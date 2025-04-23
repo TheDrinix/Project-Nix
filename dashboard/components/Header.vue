@@ -25,7 +25,7 @@ const handleLogout = async () => {
     <div class="navbar bg-neutral-800/30 border-b-2 border-neutral-800">
       <div class="container mx-auto">
         <div class="flex flex-1 items-center">
-          <NuxtLink to="/" class="text-white font-bold text-xl"><span class="text-primary">Nix</span> dashboard</NuxtLink>
+          <NuxtLink to="/" class="text-white font-bold text-xl"><span class="text-primary-400">Nix</span> dashboard</NuxtLink>
           <div v-if="loggedIn && !isPhoneSize" class="flex ml-4">
             <UNavigationMenu orientation="horizontal" :items="links" />
           </div>
