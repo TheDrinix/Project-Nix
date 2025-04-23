@@ -7,15 +7,18 @@ const props = defineProps<{
 }>();
 const lobbyStore = useLobbyStore();
 
-const model = defineModel<boolean>()
+const model = defineModel<boolean>();
 
 const toast = useToast();
 
 const handleLobbyDisable = async () => {
   try {
-    const res = await $fetch(`/api/guilds/${props.guildId}/lobbies/${props.lobbyId}`, {
-      method: 'DELETE'
-    });
+    const res = await $fetch(
+      `/api/guilds/${props.guildId}/lobbies/${props.lobbyId}`,
+      {
+        method: 'DELETE',
+      },
+    );
 
     lobbyStore.disableLobby(props.lobbyId);
   } catch (e) {
@@ -26,7 +29,7 @@ const handleLobbyDisable = async () => {
           toast.add({
             title: 'Unauthorized',
             description: 'You do not have permission to disable this lobby',
-            color: 'red'
+            color: 'error',
           });
           await navigateTo(`/guilds`);
           break;
@@ -34,36 +37,48 @@ const handleLobbyDisable = async () => {
           toast.add({
             title: 'Not found',
             description: 'The lobby you are trying to disable does not exist',
-            color: 'red'
+            color: 'error',
           });
           break;
         default:
           toast.add({
             title: 'An error occurred',
             description: 'An error occurred while trying to disable the lobby',
-            color: 'red'
+            color: 'error',
           });
       }
     }
   }
 
   model.value = false;
-}
+};
 </script>
 
 <template>
-  <UModal v-model="model">
-    <div class="p-4">
-      <h3 class="text-lg font-medium">Disable lobby</h3>
-      <p class="text-sm text-gray-300 mt-2">Are you sure you want to disable this lobby?</p>
-      <div class="flex justify-end mt-4">
-        <UButton color="yellow" @click="() => (model = false)">Cancel</UButton>
-        <UButton class="ml-2" @click="handleLobbyDisable" color="red">Disable</UButton>
+  <UModal v-model:open="model">
+    <template #content>
+      <div class="p-4">
+        <h3 class="text-lg font-medium">Disable lobby</h3>
+        <p class="text-sm text-neutral-300 mt-2">
+          Are you sure you want to disable this lobby?
+        </p>
+        <div class="flex justify-end mt-4">
+          <UButton
+            color="warning"
+            @click="
+            () => {
+              model = false;
+            }
+          "
+          >Cancel</UButton
+          >
+          <UButton class="ml-2" @click="handleLobbyDisable" color="error"
+          >Disable</UButton
+          >
+        </div>
       </div>
-    </div>
+    </template>
   </UModal>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

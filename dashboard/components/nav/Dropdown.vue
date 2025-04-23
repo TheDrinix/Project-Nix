@@ -24,7 +24,7 @@ const items = computed(() => {
       {
         label: 'Logout',
         icon: 'i-heroicons-arrow-left-start-on-rectangle',
-        click: () => {
+        onClick: () => {
           emit('logout');
         }
       }
@@ -33,7 +33,7 @@ const items = computed(() => {
     [{
       label: 'Logout',
       icon: 'i-heroicons-arrow-left-start-on-rectangle',
-      click: () => {
+      onClick: () => {
         emit('logout');
       }
     }]
@@ -42,12 +42,12 @@ const items = computed(() => {
 </script>
 
 <template>
-  <UDropdown :items>
+  <UDropdownMenu :items>
     <div class="flex items-center">
       <span class="mr-4 font-medium">{{username}}</span>
       <UAvatar :src="avatarUrl" />
     </div>
-  </UDropdown>
+  </UDropdownMenu>
 </template>
 
 <style scoped>

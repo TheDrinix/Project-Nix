@@ -25,7 +25,7 @@ const previewData = computed(() => {
 </script>
 
 <template>
-<UCard :ui="{ body: { padding: 'p-2 sm:p-3' } }">
+<UCard :ui="{ body: 'p-2 sm:p-3' }">
   <div class="grid grid-cols-[240px_auto] gap-4 grid-rows-[auto_auto] ">
     <div class="row-span-full">
       <LobbyPreview v-bind="previewData" />
@@ -45,8 +45,8 @@ const previewData = computed(() => {
     </div>
     <div class="w-full mt-auto flex justify-end">
       <UButtonGroup>
-        <UButton :to="`/guilds/${guildId}/lobbies/${id}/edit`" size="sm" color="yellow">Edit</UButton>
-        <UButton size="sm" color="red" @click="isDisableModalOpen = true">Disable</UButton>
+        <UButton :to="`/guilds/${guildId}/lobbies/${id}/edit`" size="sm" color="warning">Edit</UButton>
+        <UButton size="sm" color="error" @click="isDisableModalOpen = true">Disable</UButton>
       </UButtonGroup>
     </div>
     <LobbyDisableModal v-model="isDisableModalOpen" :lobby-id="id" :guild-id="guildId" />

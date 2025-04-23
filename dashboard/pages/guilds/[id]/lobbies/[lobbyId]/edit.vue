@@ -21,7 +21,7 @@ const lobbyName = computed(() => {
 <template>
   <div>
     <h3 class="text-lg font-medium"><span class="text-primary">Editing</span> {{lobbyName}} lobby</h3>
-    <UDivider class="my-2" />
+    <USeparator class="my-2" />
     <div v-if="lobby">
       <LobbyEditForm :lobby="lobby" />
     </div>

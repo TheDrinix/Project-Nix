@@ -16,7 +16,7 @@ const formSchema = z
   .object({
     lobbyId: z.string().nonempty('Lobby channel group is required'),
     entrypointId: z.string().nonempty('Entrypoint channel is required'),
-    waitingRoomId: z.string().nullable(),
+    waitingRoomId: z.string().nullable().optional(),
     namingScheme: z.string()
       .min(3, 'Naming scheme must be at least 3 characters')
       .max(50, 'Naming scheme must be at most 50 characters'),
@@ -46,7 +46,7 @@ const usableChannelGroups = computed(() => {
         && existingLobbies.indexOf(cc.id) === -1;
     })
     .map(cc => ({
-      name: cc.name,
+      label: cc.name,
       value: cc.id,
     }));
 });
@@ -60,7 +60,7 @@ const entrypointOptions = computed(() => {
     .filter(c => c.id !== formState.value.waitingRoomId)
     .map(c => ({
       value: c.id,
-      name: c.name
+      label: c.name
     }));
 });
 
@@ -69,11 +69,11 @@ const waitingRoomOptions = computed(() => {
     .filter(c => c.id !== formState.value.entrypointId)
     .map(c => ({
       value: c.id,
-      name: c.name
+      label: c.name
     }));
 
   return [
-    { name: 'None' },
+    { label: 'None' },
     ...channelOptions
   ]
 });
@@ -100,6 +100,7 @@ const handleSubmit = async (event: FormSubmitEvent<FormSchema>) => {
   try {
    const body = {
       ...event.data,
+     entryPointId: '',
      waitingRoomId: event.data.waitingRoomId || null,
      protectedChannelIds: lobbyChannels.value.map(c => c.id)
    }
@@ -120,7 +121,7 @@ const handleSubmit = async (event: FormSubmitEvent<FormSchema>) => {
           toast.add({
             title: 'Invalid form data',
             description: 'Please check your inputs and try again.',
-            color: 'red'
+            color: 'error'
           })
           break;
         case 401:
@@ -128,7 +129,7 @@ const handleSubmit = async (event: FormSubmitEvent<FormSchema>) => {
           toast.add({
             title: 'Unauthorized',
             description: 'You do not have permission to create a lobby.',
-            color: 'red'
+            color: 'error'
           })
           await navigateTo({ name: 'guilds' })
           break;
@@ -136,14 +137,14 @@ const handleSubmit = async (event: FormSubmitEvent<FormSchema>) => {
           toast.add({
             title: 'Guild not found',
             description: 'The guild you are trying to create a lobby in is unknown to Nix',
-            color: 'red'
+            color: 'error'
           })
           break;
         default:
           toast.add({
             title: 'An error occurred',
             description: 'An error occurred while trying to create a lobby, please try again later.',
-            color: 'red'
+            color: 'error'
           })
           break;
       }
@@ -162,39 +163,42 @@ const handleSubmit = async (event: FormSubmitEvent<FormSchema>) => {
     @submit.prevent="handleSubmit"
     class="space-y-2"
   >
-    <UFormGroup label="Lobby channel group" name="lobbyId">
+    <UFormField label="Lobby channel group" name="lobbyId">
       <USelect
+        class="w-full"
         v-model="formState.lobbyId"
-        :options="usableChannelGroups"
+        :items="usableChannelGroups"
         option-attribute="name"
         placeholder="Select lobby channel group"
         @change="handleLobbySelect"
       />
-    </UFormGroup>
+    </UFormField>
 
-    <UFormGroup label="Entrypoint channel" name="entryPointId">
+    <UFormField label="Entrypoint channel" name="entryPointId">
       <USelect
+        class="w-full"
         v-model="formState.entrypointId"
-        :options="entrypointOptions"
+        :items="entrypointOptions"
         option-attribute="name"
         placeholder="Select entrypoint channel"
         :disabled="!formState.lobbyId"
       />
-    </UFormGroup>
+    </UFormField>
 
-    <UFormGroup label="Waiting room channel" name="waitingRoomId">
+    <UFormField label="Waiting room channel" name="waitingRoomId">
       <USelect
+        class="w-full"
         v-model="formState.waitingRoomId"
-        :options="waitingRoomOptions"
+        :items="waitingRoomOptions"
         option-attribute="name"
         placeholder="Select waiting room channel for private lobby"
         :disabled="!formState.entrypointId"
       />
-    </UFormGroup>
+    </UFormField>
 
-    <UFormGroup label="Naming scheme" name="namingScheme" description="...">
-      <UInput v-model="formState.namingScheme" />
-    </UFormGroup>
+    <UFormField label="Naming scheme" name="namingScheme" description="...">
+      <UInput class="w-full" v-model="formState.namingScheme" />
+    </UFormField>
 
     <UCheckbox
       v-model="formState.allowPersonalizedNaming"
@@ -206,7 +210,7 @@ const handleSubmit = async (event: FormSubmitEvent<FormSchema>) => {
       <UButton type="submit">Create</UButton>
       <UButton
         :to="{ name: 'guilds-id-lobbies', params: { id: guildId } }"
-        color="red"
+        color="error"
         >Cancel</UButton
       >
     </UButtonGroup>

@@ -9,7 +9,7 @@ const guildId = computed(() => route.params.id as string);
 <template>
   <div class="w-full">
     <h3 class="text-lg font-medium">Create lobby</h3>
-    <UDivider class="my-2" />
+    <USeparator class="my-2" />
     <CreateForm :guild-id="guildId" />
   </div>
 </template>

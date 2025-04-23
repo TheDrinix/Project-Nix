@@ -8,7 +8,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
       toast.add({
         title: 'Unauthorized',
         description: 'You must be logged in to access this page.',
-        color: 'red'
+        color: 'error'
       })
     }
 

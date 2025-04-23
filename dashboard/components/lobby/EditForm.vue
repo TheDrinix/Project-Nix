@@ -22,7 +22,7 @@ const formSchema = z
       .max(50, 'Naming scheme must be at most 50 characters long'),
     allowPersonalizedNaming: z.boolean(),
     entryPointId: z.string().nonempty('Entrypoint channel is required'),
-    waitingRoomId: z.string().nullable(),
+    waitingRoomId: z.string().nullable().optional(),
   }).refine(data => data.entryPointId !== data.waitingRoomId, {
     message: 'Entrypoint channel and waiting room channel cannot be the same',
     path: ['waitingRoomId', 'entryPointId'],
@@ -43,7 +43,7 @@ const entryPointChannels = computed(() => {
   return lobbyChannels.value.map(channel => {
     return {
       value: channel.id,
-      name: channel.name,
+      label: channel.name,
     };
   });
 });
@@ -52,13 +52,14 @@ const waitingRoomChannels = computed(() => {
   const channelOptions = lobbyChannels.value.map(channel => {
     return {
       value: channel.id,
-      name: channel.name,
+      label: channel.name,
     };
   });
 
   return [
     {
-      name: 'None',
+      label: 'None',
+      value: ''
     },
     ...channelOptions
   ]
@@ -95,7 +96,7 @@ const handleSubmit = async (event: FormSubmitEvent<FormSchema>) => {
           toast.add({
             title: 'Validation error',
             description: 'Please check the form for errors',
-            color: 'red'
+            color: 'error'
           });
           return;
         case 401:
@@ -103,7 +104,7 @@ const handleSubmit = async (event: FormSubmitEvent<FormSchema>) => {
           toast.add({
             title: 'Unauthorized',
             description: 'You are not authorized to perform this action',
-            color: 'red'
+            color: 'error'
           });
           await navigateTo({ name: 'guilds' })
           break;
@@ -111,14 +112,14 @@ const handleSubmit = async (event: FormSubmitEvent<FormSchema>) => {
           toast.add({
             title: 'Not found',
             description: 'The lobby you are trying to edit does not exist',
-            color: 'red'
+            color: 'error'
           });
           break;
         default:
           toast.add({
             title: 'An error occurred',
             description: 'An error occurred while trying to edit the lobby',
-            color: 'red'
+            color: 'error'
           });
       }
     }
@@ -130,23 +131,23 @@ const handleSubmit = async (event: FormSubmitEvent<FormSchema>) => {
 
 <template>
   <UForm :validate="validate" :schema="formSchema" :state="formState" @submit.prevent="handleSubmit" class="space-y-2">
-    <UFormGroup label="Entrypoint channel" name="entryPointId">
-      <USelect v-model="formState.entryPointId" :options="entryPointChannels" option-attribute="name" />
-    </UFormGroup>
+    <UFormField label="Entrypoint channel" name="entryPointId">
+      <USelect class="w-full" v-model="formState.entryPointId" :items="entryPointChannels" option-attribute="name" />
+    </UFormField>
 
-    <UFormGroup label="Waiting room channel" name="waitingRoomId">
-      <USelect v-model="formState.waitingRoomId" :options="waitingRoomChannels" option-attribute="name" />
-    </UFormGroup>
+    <UFormField label="Waiting room channel" name="waitingRoomId">
+      <USelect class="w-full" v-model="formState.waitingRoomId" :items="waitingRoomChannels" option-attribute="name" />
+    </UFormField>
 
-    <UFormGroup label="Naming scheme" name="namingScheme">
-      <UInput v-model="formState.namingScheme" />
-    </UFormGroup>
+    <UFormField label="Naming scheme" name="namingScheme">
+      <UInput class="w-full" v-model="formState.namingScheme" />
+    </UFormField>
 
     <UCheckbox v-model="formState.allowPersonalizedNaming" name="allowPersonalizedNaming" label="Allow personalized naming" />
 
     <UButtonGroup>
       <UButton type="submit">Save</UButton>
-      <UButton :to="`/guilds/${props.lobby.guildId}/lobbies`" color="red">Cancel</UButton>
+      <UButton :to="`/guilds/${props.lobby.guildId}/lobbies`" color="error">Cancel</UButton>
     </UButtonGroup>
   </UForm>
 </template>

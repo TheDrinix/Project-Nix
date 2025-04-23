@@ -1,5 +1,5 @@
 import type { ChannelStoreState } from '~/types/guild';
-import { type DiscordChannel } from '~/types/discord';
+import type { DiscordChannel } from '~/types/discord';
 
 export const useChannelStore = defineStore('channels', {
   state: (): ChannelStoreState => ({

@@ -12,7 +12,7 @@ const iconUrl = computed(() => {
 
 <template>
   <NuxtLink :to="{ name: 'guilds-id-lobbies', params: { id: guild.id } }">
-    <div class="p-4 rounded-md flex flex-col items-center hover:bg-gray-800 bg-opacity-25 transition-all">
+    <div class="p-4 rounded-md flex flex-col items-center hover:bg-neutral-800/40 transition-all">
       <UAvatar :alt="guild.name" :src="iconUrl" size="3xl" class="mb-2" />
       <span>{{guild.name}}</span>
     </div>

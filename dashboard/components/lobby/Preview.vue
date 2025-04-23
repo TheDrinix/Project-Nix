@@ -24,8 +24,8 @@ const usersChannelName = computed(() => {
 </script>
 
 <template>
-  <div class="w-[240px] flex flex-col py-2 px-1 bg-neutral-900 bg-opacity-35 rounded-lg">
-    <div class="py-2 flex items-center text-xs font-medium text-gray-300">
+  <div class="w-[240px] flex flex-col py-2 px-1 bg-neutral-900/35 rounded-lg">
+    <div class="py-2 flex items-center text-xs font-medium text-neutral-300">
       <UIcon name="i-heroicons-chevron-down" />
       <h4 class="uppercase pl-1">{{lobbyName || 'Rooms'}}</h4>
     </div>

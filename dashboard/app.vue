@@ -1,9 +1,11 @@
 <template>
-  <div class="min-h-screen h-full bg-gray-900">
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-
-    <UNotifications />
-  </div>
+  <UApp>
+    <div class="min-h-screen h-full bg-neutral-900">
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
+    </div>
+  </UApp>
 </template>
+<script setup lang="ts">
+</script>

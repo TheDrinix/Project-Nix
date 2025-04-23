@@ -59,16 +59,16 @@ const isMobileSize = useMediaQuery('(max-width: 768px)', { ssrWidth: 1024 });
         <div class="flex items-center">
           <UAvatar :alt="guild.name" :src="iconUrl" class="" />
           <h1 class="text-2xl font-bold ml-4">{{ guild.name }}</h1>
-          <UDropdown v-if="isMobileSize" :items="[links]" class="ml-auto" :popper="{ arrow: true }">
+          <UDropdownMenu v-if="isMobileSize" :items="[links]" class="ml-auto" :popper="{ arrow: true }">
             <UButton variant="ghost" color="primary" icon="i-heroicons-bars-3" />
-          </UDropdown>
+          </UDropdownMenu>
         </div>
       </template>
 
       <div class="flex w-full">
         <template v-if="!isMobileSize">
-          <UVerticalNavigation class="min-w-48" :links="links" />
-          <UDivider class="mx-2" orientation="vertical" />
+          <UNavigationMenu orientation="vertical" class="min-w-48" :items="links" />
+          <USeparator class="mx-2" orientation="vertical" />
         </template>
         <div class="min-h-24 w-full">
           <NuxtPage />

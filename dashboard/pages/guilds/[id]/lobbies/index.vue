@@ -32,10 +32,10 @@ const refreshLobbies = async () => {
       </UTooltip>
       <UButton class="ml-auto" :to="{ name: 'guilds-id-lobbies-create', params: { id: guildId } }" size="sm">Create lobby</UButton>
     </div>
-    <UDivider class="my-2" />
+    <USeparator class="my-2" />
     <div v-if="status === 'success'" class="flex flex-col gap-2">
       <Lobby v-for="lobby in data" v-bind="lobby" :key="lobby.id" />
-      <div v-if="!data?.length" class="text-center text-gray-500">
+      <div v-if="!data?.length" class="text-center text-neutral-500">
         There are currently no lobbies in this guild!
       </div>
     </div>
