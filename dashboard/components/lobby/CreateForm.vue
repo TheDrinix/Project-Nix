@@ -168,7 +168,6 @@ const handleSubmit = async (event: FormSubmitEvent<FormSchema>) => {
         class="w-full"
         v-model="formState.lobbyId"
         :items="usableChannelGroups"
-        option-attribute="name"
         placeholder="Select lobby channel group"
         @change="handleLobbySelect"
       />
@@ -179,7 +178,6 @@ const handleSubmit = async (event: FormSubmitEvent<FormSchema>) => {
         class="w-full"
         v-model="formState.entrypointId"
         :items="entrypointOptions"
-        option-attribute="name"
         placeholder="Select entrypoint channel"
         :disabled="!formState.lobbyId"
       />
@@ -190,7 +188,6 @@ const handleSubmit = async (event: FormSubmitEvent<FormSchema>) => {
         class="w-full"
         v-model="formState.waitingRoomId"
         :items="waitingRoomOptions"
-        option-attribute="name"
         placeholder="Select waiting room channel for private lobby"
         :disabled="!formState.entrypointId"
       />

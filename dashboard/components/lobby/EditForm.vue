@@ -59,7 +59,6 @@ const waitingRoomChannels = computed(() => {
   return [
     {
       label: 'None',
-      value: ''
     },
     ...channelOptions
   ]
@@ -132,11 +131,16 @@ const handleSubmit = async (event: FormSubmitEvent<FormSchema>) => {
 <template>
   <UForm :validate="validate" :schema="formSchema" :state="formState" @submit.prevent="handleSubmit" class="space-y-2">
     <UFormField label="Entrypoint channel" name="entryPointId">
-      <USelect class="w-full" v-model="formState.entryPointId" :items="entryPointChannels" option-attribute="name" />
+      <USelect class="w-full" v-model="formState.entryPointId" :items="entryPointChannels" />
     </UFormField>
 
     <UFormField label="Waiting room channel" name="waitingRoomId">
-      <USelect class="w-full" v-model="formState.waitingRoomId" :items="waitingRoomChannels" option-attribute="name" />
+      <USelect
+        class="w-full"
+        v-model="formState.waitingRoomId"
+        :items="waitingRoomChannels"
+        placeholder="Select waiting room channel for private lobby"
+      />
     </UFormField>
 
     <UFormField label="Naming scheme" name="namingScheme">
