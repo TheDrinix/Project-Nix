@@ -21,6 +21,12 @@ const handleLobbyDisable = async () => {
     );
 
     lobbyStore.disableLobby(props.lobbyId);
+
+    toast.add({
+      title: 'Lobby disabled',
+      description: 'The lobby has been disabled successfully',
+      color: 'success',
+    })
   } catch (e) {
     if (e instanceof FetchError) {
       switch (e.status) {
@@ -55,27 +61,17 @@ const handleLobbyDisable = async () => {
 </script>
 
 <template>
-  <UModal v-model:open="model">
-    <template #content>
-      <div class="p-4">
-        <h3 class="text-lg font-medium">Disable lobby</h3>
-        <p class="text-sm text-neutral-300 mt-2">
-          Are you sure you want to disable this lobby?
-        </p>
-        <div class="flex justify-end mt-4">
-          <UButton
-            color="warning"
-            @click="
-            () => {
-              model = false;
-            }
-          "
-          >Cancel</UButton
-          >
-          <UButton class="ml-2" @click="handleLobbyDisable" color="error"
-          >Disable</UButton
-          >
-        </div>
+  <UModal title="Disable lobby" v-model:open="model">
+    <template #body>
+      <p class="text-sm text-neutral-300">
+        Are you sure you want to disable this lobby?
+      </p>
+    </template>
+
+    <template #footer>
+      <div class="ml-auto">
+        <UButton color="warning" @click="() => { model = false; }">Cancel</UButton>
+        <UButton class="ml-2" @click="handleLobbyDisable" color="error">Disable</UButton>
       </div>
     </template>
   </UModal>
