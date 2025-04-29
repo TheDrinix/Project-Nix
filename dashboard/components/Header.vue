@@ -22,7 +22,7 @@ const handleLogout = async () => {
 
 <template>
   <header>
-    <div class="navbar top-0  bg-muted/40 border-b-2 border-muted fixed backdrop-blur">
+    <div class="navbar top-0 bg-muted/40 border-b-2 border-muted fixed backdrop-blur z-10">
       <div class="container mx-auto">
         <div class="flex flex-1 items-center">
           <NuxtLink to="/" class="text-white font-bold text-xl"><span class="text-primary-400">Nix</span> dashboard</NuxtLink>

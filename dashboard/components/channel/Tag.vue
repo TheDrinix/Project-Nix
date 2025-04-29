@@ -11,7 +11,7 @@ const channelName = computed(() => {
 });
 
 const icon = computed(() => {
-  return props.type === 'voice' ? 'i-heroicons-speaker-wave' : 'i-heroicons-hashtag';
+  return props.type === 'voice' ? 'i-lucide-volume-2' : 'i-lucide-hash';
 });
 </script>
 

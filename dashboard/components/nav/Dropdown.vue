@@ -23,7 +23,7 @@ const items = computed(() => {
     [
       {
         label: 'Logout',
-        icon: 'i-heroicons-arrow-left-start-on-rectangle',
+        icon: 'i-lucide-log-out',
         onClick: () => {
           emit('logout');
         }
@@ -32,7 +32,7 @@ const items = computed(() => {
   ] : [
     [{
       label: 'Logout',
-      icon: 'i-heroicons-arrow-left-start-on-rectangle',
+      icon: 'i-lucide-log-out',
       onClick: () => {
         emit('logout');
       }

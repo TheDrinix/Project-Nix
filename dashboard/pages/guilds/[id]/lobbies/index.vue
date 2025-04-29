@@ -28,7 +28,7 @@ const refreshLobbies = async () => {
     <div class="flex items-center">
       <h3 class="text-lg font-medium">Lobbies</h3>
       <UTooltip text="Refresh lobby list" :popper="{ placement: 'right', arrow: true }">
-        <UButton @click="refreshLobbies" icon="i-heroicons-arrow-path" variant="link" square />
+        <UButton @click="refreshLobbies" icon="i-lucide-refresh-cw" variant="link" square />
       </UTooltip>
       <UButton class="ml-auto" :to="{ name: 'guilds-id-lobbies-create', params: { id: guildId } }" size="sm">Create lobby</UButton>
     </div>

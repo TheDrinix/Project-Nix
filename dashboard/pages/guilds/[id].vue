@@ -60,7 +60,7 @@ const isMobileSize = useMediaQuery('(max-width: 768px)', { ssrWidth: 1024 });
           <UAvatar :alt="guild.name" :src="iconUrl" class="" />
           <h1 class="text-2xl font-bold ml-4">{{ guild.name }}</h1>
           <UDropdownMenu v-if="isMobileSize" :items="[links]" class="ml-auto" :popper="{ arrow: true }">
-            <UButton variant="ghost" color="primary" icon="i-heroicons-bars-3" />
+            <UButton variant="ghost" color="primary" icon="i-lucide-menu" />
           </UDropdownMenu>
         </div>
       </template>
