@@ -14,21 +14,21 @@ export const embedFieldSchema = z.object({
 
 export const embedSchema = z.object({
   title: z.string().max(100, 'Title must be at most 50 characters').optional(),
-  titleUrl: z.string().url('Invalid title URL').optional(),
+  url: z.string().url('Invalid title URL').optional(),
   description: z.string().max(1024, 'Description must be at most 1024 characters').optional(),
   color: z.number().int().min(0, 'Invalid hex color').max(0xFFFFFF, 'Invalid hex color'),
   timestamp: z.string().optional(),
   author: z.object({
     name: z.string().max(256, 'Author name must be at most 256 characters').optional(),
-    iconUrl: z.string().url('Invalid author icon url').optional()
+    icon_url: z.string().url('Invalid author icon url').optional()
   })
-    .refine(data => (!(!!data.iconUrl && !data.name)), {
+    .refine(data => (!(!!data.icon_url && !data.name)), {
       message: 'Author name must be at least 1 character',
       path: ['name']
     }),
   footer: z.object({
     text: z.string().max(200, 'Footer text must be at most 200 characters').optional(),
-    iconUrl: z.string().url('Invalid footer icon url').optional()
+    icon_url: z.string().url('Invalid footer icon url').optional()
   }),
   fields: z.array(embedFieldSchema).default([]),
   image: z.object({

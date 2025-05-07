@@ -34,7 +34,7 @@ const model = defineModel<Embed['author']>({
         <UFormField class="w-full" label="Author icon url" name="author.url">
           <UInput
             class="w-full"
-            v-model="model.iconUrl"
+            v-model="model.icon_url"
             placeholder="Author icon url"
           />
         </UFormField>

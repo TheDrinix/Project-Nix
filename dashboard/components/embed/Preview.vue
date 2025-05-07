@@ -46,8 +46,8 @@
   >
     <div class="flex items-center col-span-1 " v-if="embed.author?.name">
       <img
-        v-if="embed.author?.iconUrl"
-        :src="embed.author?.iconUrl"
+        v-if="embed.author?.icon_url"
+        :src="embed.author?.icon_url"
         alt="Author icon"
         class="w-6 h-6 mr-2 rounded-full"
       />
@@ -56,7 +56,7 @@
       </span>
     </div>
     <div class="col-span-1 font-semibold text-base" v-if="embed.title">
-      <a class="text-blue-400" v-if="embed.titleUrl" :href="embed.titleUrl">{{ embed.title }}</a>
+      <a class="text-blue-400" v-if="embed.url" :href="embed.url">{{ embed.title }}</a>
       <span v-else>{{ embed.title }}</span>
     </div>
     <div v-html="description"></div>
@@ -74,10 +74,10 @@
     <div class="embed-thumbnail" v-if="embed.thumbnail?.url">
       <img class="w-20 h-20 rounded ml-4" :src="embed.thumbnail?.url" alt="Embed thumbnail image">
     </div>
-    <div v-if="embed.footer?.text || embed.footer?.iconUrl" class="flex items-center">
+    <div v-if="embed.footer?.text || embed.footer?.icon_url" class="flex items-center">
       <img
-        v-if="embed.footer.iconUrl"
-        :src="embed.footer.iconUrl"
+        v-if="embed.footer.icon_url"
+        :src="embed.footer.icon_url"
         alt="Embed footer icon"
         class="w-5 h-5 mr-2 rounded-full"
       />

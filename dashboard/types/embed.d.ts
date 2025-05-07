@@ -1,7 +1,7 @@
 export interface Embed {
   color: number
   title?: string
-  titleUrl?: string
+  url?: string
   author?: EmbedAuthor
   description?: string
   thumbnail?: EmbedThumbnail
@@ -13,7 +13,7 @@ export interface Embed {
 
 export interface EmbedAuthor {
   name?: string
-  iconUrl?: string
+  icon_url?: string
 }
 
 export interface EmbedThumbnail {
@@ -32,5 +32,5 @@ export interface EmbedImage {
 
 export interface EmbedFooter {
   text?: string
-  iconUrl?: string
+  icon_url?: string
 }

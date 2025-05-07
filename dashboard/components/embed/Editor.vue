@@ -28,13 +28,13 @@ const fields: EmbedField[] = (props.embed.fields || []).map(f => {
 const formState = ref<EmbedSchema>({
   author: {
     name: '',
-    iconUrl: '',
+    icon_url: '',
   },
   color: 0xC27AFF,
   description: '',
   footer: {
     text: '',
-    iconUrl: '',
+    icon_url: '',
   },
   image: {
     url: '',
@@ -43,7 +43,7 @@ const formState = ref<EmbedSchema>({
     url: '',
   },
   title: '',
-  titleUrl: '',
+  url: '',
   ...(JSON.parse(JSON.stringify(props.embed)) as Embed),
   fields: fields.slice(0),
 });
@@ -92,13 +92,13 @@ const handleEmbedSave = (event: FormSubmitEvent<EmbedSchema>) => {
   const embed: Embed = {
     author: {
       name: '',
-      iconUrl: '',
+      icon_url: '',
     },
     color: 0xC27AFF,
     description: '',
     footer: {
       text: '',
-      iconUrl: '',
+      icon_url: '',
     },
     image: {
       url: '',
@@ -107,7 +107,7 @@ const handleEmbedSave = (event: FormSubmitEvent<EmbedSchema>) => {
       url: '',
     },
     title: '',
-    titleUrl: '',
+    url: '',
     ...(JSON.parse(JSON.stringify(event.data)) as Embed),
     fields: event.data.fields.map((f: EmbedField) => {
       return {
@@ -125,13 +125,13 @@ const handleEmbedReset = () => {
   formState.value = {
     author: {
       name: '',
-      iconUrl: '',
+      icon_url: '',
     },
     color: 0xC27AFF,
     description: '',
     footer: {
       text: '',
-      iconUrl: '',
+      icon_url: '',
     },
     image: {
       url: '',
@@ -140,7 +140,7 @@ const handleEmbedReset = () => {
       url: '',
     },
     title: '',
-    titleUrl: '',
+    url: '',
     ...(JSON.parse(JSON.stringify(props.embed)) as Embed),
     fields: fields.slice(0)
   }
@@ -150,13 +150,13 @@ const handleEmbedClear = () => {
   formState.value = {
     author: {
       name: '',
-      iconUrl: '',
+      icon_url: '',
     },
     color: 0xC27AFF,
     description: '',
     footer: {
       text: '',
-      iconUrl: '',
+      icon_url: '',
     },
     image: {
       url: '',
@@ -165,7 +165,7 @@ const handleEmbedClear = () => {
       url: '',
     },
     title: '',
-    titleUrl: '',
+    url: '',
     fields: [],
   }
 }
@@ -177,7 +177,7 @@ const handleEmbedClear = () => {
       <EmbedEditorAuthor v-model="formState.author" />
       <EmbedEditorBody
         v-model:title="formState.title"
-        v-model:title-url="formState.titleUrl"
+        v-model:title-url="formState.url"
         v-model:description="formState.description"
         v-model:color="embedColorHex"
       />

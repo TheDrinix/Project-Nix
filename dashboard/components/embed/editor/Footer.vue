@@ -35,7 +35,7 @@
         <UFormField class="w-full" label="Footer icon" name="footer.iconUrl">
           <UInput
             class="w-full"
-            v-model="model.iconUrl"
+            v-model="model.icon_url"
             placeholder="Footer icon URL"
           />
         </UFormField>
