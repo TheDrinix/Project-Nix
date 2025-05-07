@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Guild {
-  id             String          @id
+  id             String              @id
   name           String
   PNRole         String?
   lobbies        Lobby[]
@@ -52,10 +52,13 @@ model WatchedThread {
 }
 
 model AnnoucementsConfig {
-  guild         Guild   @relation(fields: [guildId], references: [id])
-  guildId       String  @unique @id
-  channelId     String
-  announceJoin  Boolean @default(true)
-  announceLeave Boolean @default(true)
-  announceBan   Boolean @default(false)
+  guild             Guild   @relation(fields: [guildId], references: [id])
+  guildId           String  @id @unique
+  channelId         String
+  announceJoin      Boolean @default(true)
+  joinMessageEmbed  Json    @default("{}")
+  announceLeave     Boolean @default(true)
+  leaveMessageEmbed Json    @default("{}")
+  announceBan       Boolean @default(false)
+  banMessageEmbed   Json    @default("{}")
 }
