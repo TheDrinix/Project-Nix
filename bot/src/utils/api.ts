@@ -283,6 +283,29 @@ class ApiService {
       throw new Error('An unknown error occurred');
     }
   }
+
+  async getAnnouncementsConfig(guildId: string, event: 'join' | 'leave' | 'ban') {
+    try {
+      const res = await this._http.get<{ messageTemplate: object, channelId: string }>(`/${guildId}/announcements`, {
+        params: {
+          select: event
+        }
+      });
+
+      return {
+        channelId: res.data.channelId,
+        messageTemplate: JSON.stringify(res.data.messageTemplate)
+      };
+    } catch(e) {
+      if (isAxiosError(e) && e.status === 404) {
+        return null;
+      }
+
+      console.error(e);
+      throw new Error('An unknown error occurred');
+    }
+
+  }
 }
 
 const apiServiceSingleton = () => {
