@@ -13,19 +13,22 @@ export default defineEventHandler(async event => {
   }
 
   try {
-    let lastId = '';
+    const query: {
+      limit: number,
+      after?: string
+    } = {
+      limit: 200
+    }
+
     while (true) {
       const res = await $fetch<DiscordGuild[]>('https://discord.com/api/users/@me/guilds', {
         headers: {
           Authorization: `Bot ${botToken}`
         },
-        query: {
-          limit: 200,
-          after: lastId
-        }
+        query
       });
 
-      lastId = res[res.length - 1]?.id;
+      query.after = res[res.length - 1]?.id;
 
       const guilds = await prisma.$transaction(res.map(guild => {
         return prisma.guild.upsert({
@@ -44,9 +47,12 @@ export default defineEventHandler(async event => {
 
       if (res.length < 200) break;
     }
-  } catch (e) {
+  } catch (e: any) {
+    console.error(e);
+
     throw createError({
-      message: 'Failed to load guilds',
+      name: 'Failed to load guilds',
+      message: e.message,
       status: 500
     });
   }
