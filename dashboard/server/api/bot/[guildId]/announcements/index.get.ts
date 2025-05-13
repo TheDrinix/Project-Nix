@@ -1,3 +1,4 @@
+import { JsonValue } from "@prisma/client/runtime/library";
 import prisma from "~/lib/prisma";
 
 export default defineEventHandler(async (event) => {
@@ -5,7 +6,7 @@ export default defineEventHandler(async (event) => {
 
   const query = getQuery(event);
 
-  const selection = query.selection;
+  const selection = query.select;
 
   if (!guildId) {
     return createError({
@@ -14,39 +15,10 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-
-  let select: any;
-  switch (selection) {
-    case 'join':
-      select = {
-        announceJoin: true,
-        joinMessageEmbed: true,
-        channelId: true
-      }
-      break;
-    case 'leave':
-      select = {
-        announceLeave: true,
-        leaveMessageEmbed: true,
-        channelId: true
-      }
-      break;
-    case 'ban':
-      select = {
-        announceBan: true,
-        banMessageEmbed: true,
-        channelId: true
-      }
-      break
-    default:
-      select = undefined;
-  }
-
   const announcementsConfig = await prisma.announcementsConfig.findFirst({
     where: {
       guildId: guildId,
     },
-    select
   });
 
   if (!announcementsConfig) {
@@ -55,6 +27,42 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Announcements config not found',
     });
   }
-  
-  return announcementsConfig;
+
+  let res: { messageTemplate: JsonValue; channelId: String; } | undefined;
+
+  switch (selection) {
+    case 'join':
+      if (announcementsConfig.announceJoin) {
+        res = {
+          messageTemplate: announcementsConfig.joinMessageEmbed,
+          channelId: announcementsConfig.channelId
+        }
+      }
+      break;
+    case 'leave':
+      if (announcementsConfig.announceLeave) {
+        res = {
+          messageTemplate: announcementsConfig.leaveMessageEmbed,
+          channelId: announcementsConfig.channelId
+        }
+      }
+      break;
+    case 'ban':
+      if (announcementsConfig.announceBan) {
+        res = {
+          messageTemplate: announcementsConfig.banMessageEmbed,
+          channelId: announcementsConfig.channelId
+        }
+      }
+      break;
+  }
+
+  if (!res) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Announcements config not found',
+    })
+  }
+
+  return res;
 })
