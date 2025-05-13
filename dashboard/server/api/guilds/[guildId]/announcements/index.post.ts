@@ -20,6 +20,7 @@ const announcementsSchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
+  const cache = useStorage('cache');
   await requireUserSession(event);
 
   const guildId = getRouterParam(event, 'guildId');
@@ -47,6 +48,12 @@ export default defineEventHandler(async (event) => {
       guildId: guildId,
     },
   });
+
+  await Promise.all([
+    cache.removeItem(`nitro:handlers:guild-announcements-config:${guildId}-join`),
+    cache.removeItem(`nitro:handlers:guild-announcements-config:${guildId}-leave`),
+    cache.removeItem(`nitro:handlers:guild-announcements-config:${guildId}-ban`)
+  ])
 
   if (!currentConfig) {
     if (!body.data.channelId) {
