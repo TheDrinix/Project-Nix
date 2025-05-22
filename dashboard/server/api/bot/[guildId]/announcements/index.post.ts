@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
   const { channelId, announceJoin, announceLeave, announceBan } = res.data;
 
   if (!channelId) {
-    await prisma.annoucementsConfig.delete({
+    await prisma.announcementsConfig.delete({
       where: {
         guildId: guildId,
       }
@@ -47,7 +47,7 @@ export default defineEventHandler(async (event) => {
     return;
   }
 
-  const announcementsConfig = await prisma.annoucementsConfig.upsert({
+  const announcementsConfig = await prisma.announcementsConfig.upsert({
     where: {
       guildId: guildId,
     },
