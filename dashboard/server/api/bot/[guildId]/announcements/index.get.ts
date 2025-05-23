@@ -1,7 +1,7 @@
 import { JsonValue } from "@prisma/client/runtime/library";
 import prisma from "~/lib/prisma";
 
-export default defineEventHandler(async (event) => {
+export default defineCachedEventHandler(async (event) => {
   const guildId = getRouterParam(event, 'guildId');
 
   const query = getQuery(event);
@@ -65,4 +65,12 @@ export default defineEventHandler(async (event) => {
   }
 
   return res;
+}, {
+  maxAge: 6 * 60 * 60,
+  name: 'guild-announcements-config',
+  getKey: (event) => {
+    const guildId = getRouterParam(event, 'guildId');
+    const query = getQuery(event) ?? '';
+    return `${guildId}-${query.select}`;
+  }
 })
