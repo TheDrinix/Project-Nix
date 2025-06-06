@@ -20,7 +20,8 @@ export const embedSchema = z.object({
   timestamp: z.string().optional(),
   author: z.object({
     name: z.string().max(256, 'Author name must be at most 256 characters').optional(),
-    icon_url: z.string().url('Invalid author icon url').or(z.string().optional())
+    icon_url: z.enum(['{user_avatar}', '{guild_icon}']).optional()
+      .or(z.string().url('Invalid author icon url'))
   })
     .refine(data => (!(!!data.icon_url && !data.name)), {
       message: 'Author name must be at least 1 character',
@@ -28,14 +29,14 @@ export const embedSchema = z.object({
     }),
   footer: z.object({
     text: z.string().max(200, 'Footer text must be at most 200 characters').optional(),
-    icon_url: z.string().url('Invalid footer icon url').or(z.string().optional())
+    icon_url: z.enum(['{user_avatar}', '{guild_icon}']).optional().or(z.string().url('Invalid footer icon url'))
   }),
   fields: z.array(embedFieldSchema).default([]),
   image: z.object({
-    url: z.string().url('Invalid image URL').or(z.string().optional())
+    url: z.enum(['{user_avatar}', '{guild_icon}']).optional().or(z.string().url('Invalid image URL'))
   }),
   thumbnail: z.object({
-    url: z.string().optional().or(z.string().url('Invalid thumbnail URL'))
+    url: z.enum(['{user_avatar}', '{guild_icon}']).optional().or(z.string().url('Invalid thumbnail URL'))
   }),
 });
 

@@ -35,9 +35,9 @@ export const createDefaultAnnouncementsConfig = async (guildId: string) => {
       announceJoin: defaultConfig.announceJoin,
       announceLeave: defaultConfig.announceLeave,
       announceBan: defaultConfig.announceBan,
-      joinMessageEmbed: JSON.stringify(defaultConfig.joinMessageEmbed),
-      leaveMessageEmbed: JSON.stringify(defaultConfig.leaveMessageEmbed),
-      banMessageEmbed: JSON.stringify(defaultConfig.banMessageEmbed),
-    },
+      joinMessageEmbed: defaultConfig.joinMessageEmbed as any,
+      leaveMessageEmbed: defaultConfig.leaveMessageEmbed as any,
+      banMessageEmbed: defaultConfig.banMessageEmbed as any,
+    }, 
   });
 }

@@ -3,7 +3,7 @@ import { embedSchema } from '~/utils/embed';
 import { z } from 'zod';
 import type { Embed } from '~/types/embed'
 import { v4 as uuid } from 'uuid';
-import type { FormSubmitEvent } from '#ui/types';
+import type { FormErrorEvent, FormSubmitEvent } from '#ui/types';
 
 const props = withDefaults(defineProps<{ embed?: Partial<Embed> }>(), {
   embed: () => ({})
@@ -30,7 +30,6 @@ const formState = ref<EmbedSchema>({
     name: '',
     icon_url: '',
   },
-  color: 0xC27AFF,
   description: '',
   footer: {
     text: '',
@@ -89,12 +88,13 @@ const clearFields = () => {
 }
 
 const handleEmbedSave = (event: FormSubmitEvent<EmbedSchema>) => {
+console.log("Saving")
+
   const embed: Embed = {
     author: {
       name: '',
       icon_url: '',
     },
-    color: 0xC27AFF,
     description: '',
     footer: {
       text: '',
@@ -127,7 +127,6 @@ const handleEmbedReset = () => {
       name: '',
       icon_url: '',
     },
-    color: 0xC27AFF,
     description: '',
     footer: {
       text: '',
