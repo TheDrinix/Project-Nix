@@ -6,10 +6,16 @@ export const fillPlaceholders = (messageTemplate: string, guild: Guild, user: Us
   const userAvatarUrl = user.displayAvatarURL() || 'https://cdn.discordapp.com/embed/avatars/0.png';
 
   return messageTemplate
-    .replaceAll('{user}', user.displayName)
+    .replaceAll('{user}', `<@${user.id}>`)
+    .replaceAll('{username}', user.displayName)
     .replaceAll('{guild}', guild.name)
     .replaceAll('{guild_icon}', guildIconUrl)
     .replaceAll('{user_avatar}', userAvatarUrl)
+    .replaceAll(/\{@(\d+)\}/g, '<@$1>')     // Mention user by ID
+    .replaceAll(/\{#(\d+)\}/g, '<#$1>')     // Mention channel by ID
+    .replaceAll(/\{&(\d+)\}/g, '<@&$1>')    // Mention role by ID
+    .replaceAll('{everyone}', '@everyone')  // Mention everyone
+    .replaceAll('{here}', '@here');         // Mention here
 }
 
 export const handleAnnouncementMessage = async (eventType: 'join' | 'leave' | 'ban', guild: Guild, user: User) => {
