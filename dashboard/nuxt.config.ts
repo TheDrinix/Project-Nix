@@ -7,7 +7,8 @@ export default defineNuxtConfig({
     '@prisma/nuxt',
     '@nuxt/ui',
     '@vueuse/nuxt',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    '@nuxt/image',
   ],
   runtimeConfig: {
     botToken: '',

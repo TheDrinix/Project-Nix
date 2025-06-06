@@ -1,6 +1,6 @@
 <template>
   <UApp>
-    <div class="min-h-screen h-full">
+    <div>
       <NuxtLayout>
         <NuxtPage />
       </NuxtLayout>
