@@ -19,6 +19,12 @@ export const useChannelStore = defineStore('channels', {
           .filter(channel => channel.type === 2 && channel.guild_id === guildId);
         }
     },
+    getGuildTextChannels: state => {
+      return (guildId: string): DiscordChannel[] => {
+        return Array.from(state.channels.values())
+          .filter(channel => channel.type === 0 && channel.guild_id === guildId)
+      }
+    },
     getLobbyChannels: state => {
       return (lobbyId: string): DiscordChannel[] => {
         return Array.from(state.channels.values())

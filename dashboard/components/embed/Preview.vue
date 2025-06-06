@@ -104,7 +104,7 @@
 .embed-preview {
   @apply bg-neutral-800 border-l-4 border-l-neutral-800 rounded
   pt-2 pb-4 px-4 mt-2 text-sm
-  grid grid-cols-[auto] grid-rows-[auto] max-w-[520px];
+  grid grid-cols-[auto] grid-rows-[auto] max-w-[520px] mx-auto;
 }
 
 .embed-preview > div {
