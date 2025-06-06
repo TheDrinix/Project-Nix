@@ -63,7 +63,7 @@ const handleLobbyDisable = async () => {
 <template>
   <UModal title="Disable lobby" v-model:open="model">
     <template #body>
-      <p class="text-sm text-neutral-300">
+      <p class="text-sm text-neutral-700 dark:text-neutral-300">
         Are you sure you want to disable this lobby?
       </p>
     </template>

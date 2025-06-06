@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header />
-    <main class="mt-18">
+    <main class="mt-18 box-border">
       <UContainer>
         <slot />
       </UContainer>

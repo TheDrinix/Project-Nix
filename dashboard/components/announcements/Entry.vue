@@ -38,7 +38,7 @@ const handleEmbedSave = async (embed: Embed) => {
       <h4 class="font-medium capitalize">{{ title }}</h4>
     </template>
 
-    <EmbedPreview :embed="message" />
+    <EmbedPreview :embed="message" :guild-id="guildId" />
 
     <template #footer>
       <UModal v-model:open="editModalOpen" fullscreen :title="`Editing ${title} embed`">

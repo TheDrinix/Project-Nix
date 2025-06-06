@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import type { HorizontalNavigationLink } from '#ui/types';
+import type { DropdownMenuItem } from '@nuxt/ui'
+import { getUserAvatarUrl } from '~/utils/discord.js'
 
 const props = defineProps<{
   avatar?: string;
   username: string;
   discordId: string;
   isPhoneSize: boolean;
-  links: HorizontalNavigationLink[]
+  links: DropdownMenuItem[]
 }>();
 
 const emit = defineEmits<{
@@ -14,7 +15,7 @@ const emit = defineEmits<{
 }>();
 
 const avatarUrl = computed(() => {
-  return props.avatar ? `https://cdn.discordapp.com/avatars/${props.discordId}/${props.avatar}.png` : `https://cdn.discordapp.com/embed/avatars/${parseInt(props.discordId) % 5}.png`;
+  return getUserAvatarUrl(props.discordId, props.avatar)
 });
 
 const items = computed(() => {

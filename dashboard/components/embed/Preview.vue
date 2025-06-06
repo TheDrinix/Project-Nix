@@ -2,8 +2,13 @@
   import type { Embed } from '~/types/embed';
   import markdownit from 'markdown-it';
 
+  const { user } = useUserSession();
+
+  const guildsStore = useGuildStore();
+
   const props = defineProps<{
-    embed: Embed
+    embed: Embed;
+    guildId?: string;
   }>();
 
   const md = markdownit().disable(['code', 'image']);
@@ -35,7 +40,53 @@
     }
   }
 
+  const replaceUrlVariables = (url: string) => {
+    if (url !== '{user_avatar}' && url !== '{guild_icon}') return url;
 
+    if (url === '{user_avatar}') {
+      if (!user.value) return '';
+
+      return getUserAvatarUrl(user.value.discordId, user.value.avatar);
+    }
+
+    if (!props.guildId) return 'https://placehold.co/512x512/27272A/9F9FA9/?text=G';
+
+    const guild = guildsStore.getGuild(props.guildId);
+
+    if (!guild) return 'https://placehold.co/512x512/27272A/9F9FA9/?text=G';
+
+    if (guild.icon) {
+      return `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`;
+    }
+      
+    const firstLetters = guild.name.split(' ').map(word => word.charAt(0).toUpperCase()).join('');
+
+    return `https://placehold.co/512x512/27272A/9F9FA9/?text=${firstLetters}`;
+  } 
+
+  const authorIconUrl = computed(() => {
+    if (!props.embed.author?.icon_url) return;
+
+    return replaceUrlVariables(props.embed.author.icon_url);
+  });
+
+  const footerIconUrl = computed(() => {
+    if (!props.embed.footer?.icon_url) return;
+
+    return replaceUrlVariables(props.embed.footer.icon_url);
+  });
+
+  const imageUrl = computed(() => {
+    if (!props.embed.image?.url) return;
+
+    return replaceUrlVariables(props.embed.image.url);
+  });
+
+  const thumbnailUrl = computed(() => {
+    if (!props.embed.thumbnail?.url) return;
+
+    return replaceUrlVariables(props.embed.thumbnail.url);
+  });
 </script>
 
 <template>
@@ -47,11 +98,11 @@
     <div class="flex items-center col-span-1 " v-if="embed.author?.name">
       <img
         v-if="embed.author?.icon_url"
-        :src="embed.author?.icon_url"
+        :src="authorIconUrl"
         alt="Author icon"
         class="w-6 h-6 mr-2 rounded-full"
       />
-      <span v-if="embed.author?.name" class="font-medium text-sm text-white">
+      <span v-if="embed.author?.name" class="font-medium text-sm text-neutral-900 dark:text-white">
         {{ embed.author?.name }}
       </span>
     </div>
@@ -69,15 +120,15 @@
       </div>
     </div>
     <div v-if="embed.image?.url">
-      <img class="rounded" :src="embed.image?.url" alt="Embed image" />
+      <img class="rounded" :src="imageUrl" alt="Embed image" />
     </div>
     <div class="embed-thumbnail" v-if="embed.thumbnail?.url">
-      <img class="w-20 h-20 rounded ml-4" :src="embed.thumbnail?.url" alt="Embed thumbnail image">
+      <img class="w-20 h-20 rounded ml-4" :src="thumbnailUrl" alt="Embed thumbnail image">
     </div>
     <div v-if="embed.footer?.text || embed.footer?.icon_url" class="flex items-center">
       <img
         v-if="embed.footer.icon_url"
-        :src="embed.footer.icon_url"
+        :src="footerIconUrl"
         alt="Embed footer icon"
         class="w-5 h-5 mr-2 rounded-full"
       />
@@ -102,9 +153,11 @@
 @import 'tailwindcss';
 
 .embed-preview {
-  @apply bg-neutral-800 border-l-4 border-l-neutral-800 rounded
+  @apply bg-neutral-200 dark:bg-neutral-800 border-l-4 border-l-neutral-800 rounded
   pt-2 pb-4 px-4 mt-2 text-sm
-  grid grid-cols-[auto] grid-rows-[auto] max-w-[520px] mx-auto;
+  grid grid-rows-[auto] max-w-[520px] mx-auto;
+
+  grid-template-columns: 1fr auto;
 }
 
 .embed-preview > div {
@@ -112,15 +165,15 @@
 }
 
 .embed-preview h1 {
-  @apply text-xl font-bold text-white;
+  @apply text-xl font-bold text-neutral-900 dark:text-white;
 }
 
 .embed-preview h2 {
-  @apply text-lg font-bold text-white;
+  @apply text-lg font-bold text-neutral-900 dark:text-white;
 }
 
 .embed-preview h3 {
-  @apply text-base font-bold text-white;
+  @apply text-base font-bold text-neutral-900 dark:text-white;
 }
 
 .embed-field h3 {
@@ -146,7 +199,7 @@
 }
 
 .embed-preview a {
-  @apply text-blue-400 hover:text-blue-300;
+  @apply text-blue-600 hover:text-blue-400 dark:text-blue-400 dark:hover:text-blue-300;
 }
 
 .embed-preview .embed-thumbnail {
@@ -154,6 +207,6 @@
 }
 
 .embed-preview code {
-  @apply bg-neutral-900 text-wrap
+  @apply bg-neutral-400/50 dark:bg-neutral-900 text-wrap
 }
 </style>
