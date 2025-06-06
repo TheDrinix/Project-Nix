@@ -54,7 +54,7 @@ model WatchedThread {
 model AnnouncementsConfig {
   guild             Guild   @relation(fields: [guildId], references: [id])
   guildId           String  @id @unique
-  channelId         String
+  channelId         String?
   announceJoin      Boolean @default(false)
   joinMessageEmbed  Json    @default("{}")
   announceLeave     Boolean @default(false)
