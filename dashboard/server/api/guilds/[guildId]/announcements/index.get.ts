@@ -12,14 +12,14 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const config = prisma.announcementsConfig.findFirst({
+  const config = await prisma.announcementsConfig.findFirst({
     where: {
       guildId: guildId,
     },
   })
 
   if (!config) {
-    return {}
+    return createDefaultAnnouncementsConfig(guildId);
   }
 
   return config;
