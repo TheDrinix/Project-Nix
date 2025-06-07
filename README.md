@@ -44,6 +44,7 @@ The **web dashboard** provides a user-friendly interface to:
 ### Planned features
 * Dashboard page for managing personalized naming schemes for admins.
 * Possibility to set permission level for accessing personalized naming schemes per lobby, also through dashboard
+* Refractor Embed related code to make it a bit less messy
 
 ---
 

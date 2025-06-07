@@ -13,20 +13,6 @@ await callOnce(guildStore.fetchGuilds);
  
 const guilds = computed(() => guildStore.getGuilds);
 
-function getGuildAcronym(name: string): string {
-  return name
-    .split(' ')
-    .map(word => word[0])
-    .join('')
-    .substring(0, 3) // Max 3 chars
-    .toUpperCase();
-}
-
-function getGuildIconUrl(guild: Guild): string | undefined {
-  if (!guild.icon) return undefined;
-  return `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`;
-}
-
 const pending = computed(() => !guildStore.hasBeenLoaded);
 </script>
 

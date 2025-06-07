@@ -1,10 +1,11 @@
 <template>
-  <div>
+  <div class="min-h-screen pt-18 flex flex-col">
     <Header />
-    <main class="mt-18 box-border">
+    <main>
       <UContainer>
         <slot />
       </UContainer>
     </main>
+    <Footer  />
   </div>
 </template>
