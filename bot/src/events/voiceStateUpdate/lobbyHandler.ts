@@ -8,16 +8,16 @@ const event: Event = {
   async execute(before: VoiceState, after: VoiceState) {
     // Connected voice channel
     if (!before.channel && after.channel) {
-      createLobbyChannel(after);
+      await createLobbyChannel(after);
     }
     // Disonnected from voice channel
     else if (!after.channel && before.channel) {
-      handleLobbyChannelDisconnect(before);
+      await handleLobbyChannelDisconnect(before);
     } else if (after.channel && before.channel) {
       // Channel switched
       if (before.channelId !== after.channelId) {
-        createLobbyChannel(after);
-        handleLobbyChannelDisconnect(before);
+        await createLobbyChannel(after);
+        await handleLobbyChannelDisconnect(before);
       }
     }
   },

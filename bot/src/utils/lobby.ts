@@ -24,7 +24,7 @@ export async function createLobbyChannel(after: VoiceState) {
 
   const channelId = after.channel.id;
 
-  if (channelId !== lobby.entryPointId || (lobby.isPrivate && channelId !== lobby.waitingRoomId)) return;
+  if (channelId !== lobby.entryPointId && (lobby.isPrivate && channelId !== lobby.waitingRoomId)) return;
 
   if (channelId === lobby.waitingRoomId) {
     const embed = new EmbedBuilder()
