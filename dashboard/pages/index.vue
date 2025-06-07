@@ -3,7 +3,7 @@ import { DashboardImage } from '#components';
 
 const { loggedIn } = useUserSession()
 
-const addToDiscordUrl = '' // TODO: Replace with actual URL
+const addToDiscordUrl = 'https://discord.com/oauth2/authorize?client_id=1341690314301247551&permissions=1393733733520&integration_type=0&scope=bot'
 
 const { data, status } = useFetch('/api/stats')
 </script>
