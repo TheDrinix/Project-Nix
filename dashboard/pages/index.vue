@@ -4,6 +4,8 @@ import { DashboardImage } from '#components';
 const { loggedIn } = useUserSession()
 
 const addToDiscordUrl = '' // TODO: Replace with actual URL
+
+const { data, status } = useFetch('/api/stats')
 </script>
 
 <template>
@@ -89,6 +91,58 @@ const addToDiscordUrl = '' // TODO: Replace with actual URL
           </UCard>
         </div>
       </UContainer>
+    </div>
+
+    <div class="mt-8" v-if="status !== 'error'">
+      <h2 class="text-xl font-semibold mb-4">
+        At a Glance
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <UCard>
+          <div class="flex items-center gap-4">
+            <UIcon name="i-heroicons-microphone" class="text-3xl text-primary" />
+            <div>
+              <p class="text-neutral-500 dark:text-neutral-400">
+                Active Lobbies
+              </p>
+              <p v-if="status === 'success'" class="text-3xl font-bold">
+                {{ data?.activeLobbies || 0 }}
+              </p>
+              <USkeleton v-else class="h-8 w-16" />
+            </div>
+          </div>
+        </UCard>
+
+        <UCard>
+          <div class="flex items-center gap-4">
+            <UIcon name="i-heroicons-chat-bubble-left-right" class="text-3xl text-primary" />
+            <div>
+              <p class="text-neutral-500 dark:text-neutral-400">
+                Watched Threads
+              </p>
+              <p v-if="status === 'success'" class="text-3xl font-bold">
+                {{ data?.watchedThreads || 0 }}
+              </p>
+              <USkeleton v-else class="h-8 w-16" />
+            </div>
+          </div>
+        </UCard>
+
+        <UCard>
+          <div class="flex items-center gap-4">
+            <UIcon name="i-heroicons-server-stack" class="text-3xl text-primary" />
+            <div>
+              <p class="text-neutral-500 dark:text-neutral-400">
+                Total Servers
+              </p>
+              <p v-if="status === 'success'" class="text-3xl font-bold">
+                {{ data?.guildCount || 0 }}
+              </p>
+              <USkeleton v-else class="h-8 w-16" />
+            </div>
+          </div>
+        </UCard>
+      </div>
     </div>
 
     <UContainer class="py-20">
