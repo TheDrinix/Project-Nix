@@ -1,0 +1,266 @@
+{
+  "id": "605df89d-ee3d-49a6-acf4-73aa0cbbe66c",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.AnnouncementsConfig": {
+      "name": "AnnouncementsConfig",
+      "schema": "",
+      "columns": {
+        "guildId": {
+          "name": "guildId",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "channelId": {
+          "name": "channelId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "announceJoin": {
+          "name": "announceJoin",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "joinMessageEmbed": {
+          "name": "joinMessageEmbed",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::jsonb"
+        },
+        "announceLeave": {
+          "name": "announceLeave",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "leaveMessageEmbed": {
+          "name": "leaveMessageEmbed",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::jsonb"
+        },
+        "announceBan": {
+          "name": "announceBan",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "banMessageEmbed": {
+          "name": "banMessageEmbed",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::jsonb"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.Guild": {
+      "name": "Guild",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "PNRole": {
+          "name": "PNRole",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.Lobby": {
+      "name": "Lobby",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "entryPointId": {
+          "name": "entryPointId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "isPrivate": {
+          "name": "isPrivate",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "waitingRoomId": {
+          "name": "waitingRoomId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "namingScheme": {
+          "name": "namingScheme",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "allowPersonalizedNaming": {
+          "name": "allowPersonalizedNaming",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "protectedChannelIds": {
+          "name": "protectedChannelIds",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'"
+        },
+        "guildId": {
+          "name": "guildId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "Lobby_entryPointId_unique": {
+          "name": "Lobby_entryPointId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "entryPointId"
+          ]
+        },
+        "Lobby_waitingRoomId_unique": {
+          "name": "Lobby_waitingRoomId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "waitingRoomId"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.PersonalizedNamingScheme": {
+      "name": "PersonalizedNamingScheme",
+      "schema": "",
+      "columns": {
+        "pattern": {
+          "name": "pattern",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "memberId": {
+          "name": "memberId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lobbyId": {
+          "name": "lobbyId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "PersonalizedNamingScheme_lobbyId_memberId_pk": {
+          "name": "PersonalizedNamingScheme_lobbyId_memberId_pk",
+          "columns": [
+            "lobbyId",
+            "memberId"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.WatchedThread": {
+      "name": "WatchedThread",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "parentId": {
+          "name": "parentId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "guildId": {
+          "name": "guildId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

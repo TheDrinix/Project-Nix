@@ -7,19 +7,21 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
     "@nuxt/image": "1.10.0",
     "@nuxt/ui": "3.1.0",
     "@pinia/nuxt": "^0.9.0",
-    "@prisma/client": "^6.2.1",
-    "@prisma/nuxt": "^0.3.0",
     "@vueuse/core": "^12.5.0",
     "@vueuse/nuxt": "^12.5.0",
+    "drizzle-orm": "^0.44.2",
     "markdown-it": "^14.1.0",
     "nuxt": "^3.16.2",
     "nuxt-auth-utils": "0.5.9",
+    "pg": "^8.16.0",
     "pinia": "^2.3.1",
     "tailwindcss": "^4.1.4",
     "uuid": "^11.1.0",
@@ -29,6 +31,8 @@
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.46",
-    "@types/markdown-it": "^14.1.2"
+    "@types/markdown-it": "^14.1.2",
+    "@types/pg": "^8.15.4",
+    "drizzle-kit": "^0.31.1"
   }
 }
