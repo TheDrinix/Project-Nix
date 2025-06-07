@@ -28,7 +28,7 @@ export default defineCachedEventHandler(async (event) => {
     });
   }
 
-  let res: { messageTemplate: JsonValue; channelId: String; } | undefined;
+  let res: { messageTemplate: JsonValue; channelId: String | null; } | undefined;
 
   switch (selection) {
     case 'join':

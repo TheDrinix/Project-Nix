@@ -6,7 +6,17 @@ const channelStore = useChannelStore();
 definePageMeta({
   middleware: [
     'auth'
-  ]
+  ],
+  redirect: (to) => {
+    const guildId = to.params.id as string;
+    if (!guildStore.getGuild(guildId)) {
+      return '/guilds'; // Redirect to guilds if the guild is invalid
+    }
+    return {
+      name: 'guilds-id-lobbies',
+      params: { id: guildId }
+    }
+  }
 })
 
 if (!guildStore.hasBeenLoaded) {
