@@ -23,7 +23,7 @@ const handleLogout = async () => {
 <template>
   <header>
     <div class="navbar top-0 bg-muted/40 border-b-2 border-muted fixed backdrop-blur z-10">
-      <div class="container mx-auto">
+      <div class="container pl-2 mx-auto">
         <div class="flex flex-1 items-center">
           <NuxtLink to="/" class="text-neutral font-bold text-xl"><span class="text-primary-400">Nix</span> dashboard</NuxtLink>
           <div v-if="loggedIn && !isPhoneSize" class="flex ml-4">
@@ -31,7 +31,7 @@ const handleLogout = async () => {
           </div>
           <div class="ml-auto">
             <div v-if="!loggedIn || !user">
-              <UButton to="/auth/discord" external color="primary" variant="outline">Login with Discord</UButton>
+              <UButton class="mr-2" to="/auth/discord" external color="primary" variant="outline">Login with Discord</UButton>
             </div>
             <div v-else>
               <NavDropdown @logout="handleLogout" :username="user.username" :avatar="user.avatar" :discord-id="user.discordId" :isPhoneSize :links />
