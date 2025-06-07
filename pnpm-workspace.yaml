@@ -1,4 +1,3 @@
 packages:
   - 'bot'
   - 'dashboard'
-  - 'packages/*'

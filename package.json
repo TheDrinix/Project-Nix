@@ -3,15 +3,15 @@
   "private": true,
   "scripts": {
     "shared:build": "pnpm --filter shared build",
-    "dashboard:dev": "pnpm shared:build && pnpm --filter dashboard dev",
-    "dashboard:build": "pnpm shared:build && pnpm --filter dashboard build",
-    "bot:dev": "pnpm shared:build && pnpm --filter bot dev",
-    "bot:build": "pnpm shared:build && pnpm --filter bot build",
-    "bot:deploy-commands": "pnpm shared:build && pnpm --filter bot deploy-commands",
+    "dashboard:dev": "pnpm --filter dashboard dev",
+    "dashboard:build": "pnpm --filter dashboard build",
+    "bot:dev": "pnpm --filter bot dev",
+    "bot:build": "pnpm --filter bot build",
+    "bot:deploy-commands": "pnpm --filter bot deploy-commands",
     "predev": "pnpm shared:build",
     "prebuild": "pnpm shared:build",
     "dev": "concurrently \"pnpm --filter dashboard dev\" \"pnpm --filter bot dev\"",
-    "build": "pnpm shared:build && pnpm dashboard:build && pnpm bot:build"
+    "build": "pnpm dashboard:build && pnpm bot:build"
   },
   "keywords": [],
   "author": "",
