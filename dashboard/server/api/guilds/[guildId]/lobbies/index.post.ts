@@ -1,6 +1,4 @@
 import { z } from 'zod';
-import prisma from '~/lib/prisma';
-import { Prisma } from '@prisma/client';
 
 const lobbySchema = z.object({
   lobbyId: z.string().nonempty(),
@@ -33,11 +31,12 @@ export default defineEventHandler(async event => {
     });
   }
 
-  const guild = await prisma.guild.findFirst({
-    where: {
-      id: guildId
-    }
-  });
+  const guild = await useDrizzle()
+    .query
+    .guilds
+    .findFirst({
+      where: eq(tables.guilds.id, guildId)
+    });
 
   if (!guild) {
     throw createError({
@@ -49,28 +48,22 @@ export default defineEventHandler(async event => {
   try {
     const { lobbyId, entrypointId, waitingRoomId, allowPersonalizedNaming, namingScheme, protectedChannelIds } = res.data;
 
-    return prisma.lobby.create({
-      data: {
-        id: lobbyId,
-        entryPointId: entrypointId,
-        guildId: guild.id,
-        isPrivate: !!waitingRoomId,
-        waitingRoomId: waitingRoomId,
-        allowPersonalizedNaming: allowPersonalizedNaming,
-        namingScheme: namingScheme,
-        protectedChannelIds: {
-          set: protectedChannelIds
-        }
-      }
-    })
-  } catch(e) {
-    if (e instanceof Prisma.PrismaClientKnownRequestError) {
-      if (e.code === 'P2002') {
-        throw createError({
-          statusCode: 409,
-          statusMessage: 'Lobby already exists'
-        });
-      }
+    return useDrizzle().insert(tables.lobbies).values({
+      id: lobbyId,
+      entryPointId: entrypointId,
+      guildId: guild.id,
+      isPrivate: !!waitingRoomId,
+      waitingRoomId: waitingRoomId,
+      allowPersonalizedNaming: allowPersonalizedNaming,
+      namingScheme: namingScheme,
+      protectedChannelIds: protectedChannelIds
+    }).returning();
+  } catch(e: any) {
+    if (e.code === '23505') { // Unique violation error code in PostgreSQL
+      throw createError({
+        statusCode: 409,
+        statusMessage: 'Lobby already exists'
+      });
     }
 
     throw createError({

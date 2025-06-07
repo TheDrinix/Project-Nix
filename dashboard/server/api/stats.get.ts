@@ -1,14 +1,14 @@
-import prisma from "~/lib/prisma"
+import { count } from "drizzle-orm"
 
 export default defineCachedEventHandler(async (event) => {
-  const guildCount = await prisma.guild.count()
-  const lobbyCount = await prisma.lobby.count()
-  const watchedThreadsCount = await prisma.watchedThread.count()
+  const guildCount = await useDrizzle().select({ count: count() }).from(tables.guilds)
+  const lobbyCount = await useDrizzle().select({ count: count() }).from(tables.lobbies)
+  const watchedThreadsCount = await useDrizzle().select({ count: count() }).from(tables.watchedThreads)
 
   return {
-    guildCount,
-    activeLobbies: lobbyCount,
-    watchedThreads: watchedThreadsCount
+    guildCount: guildCount[0].count,
+    activeLobbies: lobbyCount[0].count,
+    watchedThreads: watchedThreadsCount[0].count
   }
 }, {
   maxAge: 30 * 60, // Cache for 30 minutes

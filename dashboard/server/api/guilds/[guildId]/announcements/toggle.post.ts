@@ -1,5 +1,4 @@
 import { z } from "zod";
-import prisma from "~/lib/prisma";
 
 const announcementsToggleSchema = z.object({
   type: z.enum(['join', 'leave', 'ban']),
@@ -7,8 +6,6 @@ const announcementsToggleSchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-  requireUserSession(event);
-
   const guildId = getRouterParam(event, 'guildId');
 
   if (!guildId) {
@@ -17,6 +14,17 @@ export default defineEventHandler(async (event) => {
       status: 400,
     });
   }
+
+  const session = await requireUserSession(event);
+
+  if (!session.secure) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized',
+    });
+  }
+
+  await checkUsersGuildPermissions(session.user.discordId, guildId, session.secure.discord.accessToken);
 
   const body = await readValidatedBody(event, (b) => announcementsToggleSchema.safeParse(b));
 
@@ -30,18 +38,18 @@ export default defineEventHandler(async (event) => {
 
   const { type, enabled } = body.data;
 
-  const config = await prisma.announcementsConfig.findFirst({
-    where: { guildId },
+  const config = await useDrizzle().query.announcementsConfigs.findFirst({
+    where: eq(tables.announcementsConfigs.guildId, guildId),
   });
 
   if (!config) {
     await createDefaultAnnouncementsConfig(guildId);
   }
 
-  return prisma.announcementsConfig.update({
-    where: { guildId },
-    data: {
-      [`announce${type.charAt(0).toUpperCase() + type.slice(1)}`]: enabled,
-    },
-  });
+  const updatedConfig = await useDrizzle().update(tables.announcementsConfigs)
+    .set({ [`announce${type.charAt(0).toUpperCase() + type.slice(1)}`]: enabled })
+    .where(eq(tables.announcementsConfigs.guildId, guildId))
+    .returning();
+
+  return updatedConfig[0] || null;
 })

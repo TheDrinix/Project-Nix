@@ -1,13 +1,10 @@
 import { z } from "zod";
-import prisma from "~/lib/prisma";
 
 const channelSchema = z.object({
   channelId: z.string().min(1, "Channel ID is required"),
 });
 
 export default defineEventHandler(async (event) => {
-  requireUserSession(event);
-
   const guildId = getRouterParam(event, 'guildId');
 
   if (!guildId) {
@@ -16,6 +13,17 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Guild ID is required',
     });
   }
+
+  const session = await requireUserSession(event);
+
+  if (!session.secure) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized',
+    });
+  }
+
+  await checkUsersGuildPermissions(session.user.discordId, guildId, session.secure.discord.accessToken);
 
   const body = await readValidatedBody(event, (b) => channelSchema.safeParse(b));
 
@@ -29,18 +37,18 @@ export default defineEventHandler(async (event) => {
 
   const { channelId } = body.data;
 
-  const config = await prisma.announcementsConfig.findFirst({
-    where: { guildId },
+  const config = await useDrizzle().query.announcementsConfigs.findFirst({
+    where: eq(tables.announcementsConfigs.guildId, guildId),
   });
 
   if (!config) {
     await createDefaultAnnouncementsConfig(guildId);
   }
 
-  return prisma.announcementsConfig.update({
-    where: { guildId },
-    data: {
-      channelId,
-    },
-  });
+  const updatedConfig = await useDrizzle().update(tables.announcementsConfigs)
+    .set({ channelId })
+    .where(eq(tables.announcementsConfigs.guildId, guildId))
+    .returning();
+
+  return updatedConfig[0] || null;
 })

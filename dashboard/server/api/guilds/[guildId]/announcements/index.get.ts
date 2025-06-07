@@ -1,8 +1,4 @@
-import prisma from '~/lib/prisma';
-
 export default defineEventHandler(async (event) => {
-  await requireUserSession(event);
-
   const guildId = getRouterParam(event, 'guildId');
 
   if (!guildId) {
@@ -12,11 +8,20 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const config = await prisma.announcementsConfig.findFirst({
-    where: {
-      guildId: guildId,
-    },
-  })
+  const session = await requireUserSession(event);
+
+  if (!session.secure) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized',
+    });
+  }
+
+  await checkUsersGuildPermissions(session.user.discordId, guildId, session.secure.discord.accessToken);
+
+  const config = await useDrizzle().query.announcementsConfigs.findFirst({
+    where: eq(tables.announcementsConfigs.guildId, guildId),
+  });
 
   if (!config) {
     return createDefaultAnnouncementsConfig(guildId);

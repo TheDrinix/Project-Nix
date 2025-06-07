@@ -1,5 +1,3 @@
-import prisma from '~/lib/prisma';
-
 export default defineEventHandler(async (event) => {
   const guildId = getRouterParam(event, 'guildId');
   const lobbyId = getRouterParam(event, 'lobbyId');
@@ -22,11 +20,8 @@ export default defineEventHandler(async (event) => {
 
   await checkUsersGuildPermissions(session.user.discordId, guildId, session.secure.discord.accessToken);
 
-  const lobby = await prisma.lobby.findFirst({
-    where: {
-      id: lobbyId,
-      guildId
-    }
+  const lobby = await useDrizzle().query.lobbies.findFirst({
+    where: and(eq(tables.lobbies.id, lobbyId), eq(tables.lobbies.guildId, guildId))
   });
 
   if (!lobby) {
@@ -36,9 +31,5 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  return prisma.lobby.delete({
-    where: {
-      id: lobbyId
-    }
-  });
+  return useDrizzle().delete(tables.lobbies).where(eq(tables.lobbies.id, lobbyId)).execute();
 });

@@ -1,4 +1,4 @@
-import prisma from '~/lib/prisma';
+import { inArray } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
   const session = await requireUserSession(event);
@@ -14,16 +14,8 @@ export default defineEventHandler(async (event) => {
     const userGuilds = await getUserGuilds(session.user.discordId, session.secure.discord.accessToken);
     const userGuildsIds = userGuilds.map(guild => guild.id);
 
-    const botGuilds = await prisma.guild.findMany({
-      where: {
-        id: {
-          in: userGuildsIds
-        },
-      },
-      select: {
-        id: true
-      }
-    });
+    const botGuilds = await useDrizzle().select({ id: tables.guilds.id }).from(tables.guilds).where(inArray(tables.guilds.id, userGuildsIds));
+
     const botGuildIds: Set<string> = new Set(botGuilds.map(guild => guild.id));
 
     return userGuilds

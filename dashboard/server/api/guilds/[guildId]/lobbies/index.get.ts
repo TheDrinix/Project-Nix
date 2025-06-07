@@ -12,9 +12,8 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  return  prisma.lobby.findMany({
-    where: {
-      guildId
-    }
-  });
+  return useDrizzle()
+    .select()
+    .from(tables.lobbies)
+    .where(eq(tables.lobbies.guildId, guildId));
 })

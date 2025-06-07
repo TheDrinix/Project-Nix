@@ -1,4 +1,3 @@
-import prisma from "~/lib/prisma";
 import { AnnouncementsConfig } from "~/types/announcements";
 
 export const createDefaultAnnouncementsConfig = async (guildId: string) => {
@@ -28,16 +27,5 @@ export const createDefaultAnnouncementsConfig = async (guildId: string) => {
     },
   }
 
-  return prisma.announcementsConfig.create({
-    data: {
-      guildId: defaultConfig.guildId,
-      channelId: defaultConfig.channelId,
-      announceJoin: defaultConfig.announceJoin,
-      announceLeave: defaultConfig.announceLeave,
-      announceBan: defaultConfig.announceBan,
-      joinMessageEmbed: defaultConfig.joinMessageEmbed as any,
-      leaveMessageEmbed: defaultConfig.leaveMessageEmbed as any,
-      banMessageEmbed: defaultConfig.banMessageEmbed as any,
-    }, 
-  });
+  return useDrizzle().insert(tables.announcementsConfigs).values(defaultConfig).returning();
 }

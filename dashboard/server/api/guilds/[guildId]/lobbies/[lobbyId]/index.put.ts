@@ -42,11 +42,11 @@ export default defineEventHandler(async event => {
 
   await checkUsersGuildPermissions(session.user.discordId, guildId, session.secure.discord.accessToken);
 
-  const lobby = await prisma.lobby.findFirst({
-    where: {
-      id: lobbyId,
-      guildId
-    }
+  const lobby = await useDrizzle().query.lobbies.findFirst({
+    where: and(
+      eq(tables.lobbies.id, lobbyId),
+      eq(tables.lobbies.guildId, guildId)
+    )
   });
 
   if (!lobby) {
@@ -56,16 +56,13 @@ export default defineEventHandler(async event => {
     });
   }
 
-  return prisma.lobby.update({
-    where: {
-      id: lobbyId
-    },
-    data: {
-      namingScheme,
-      entryPointId,
-      waitingRoomId,
-      allowPersonalizedNaming,
-      isPrivate: !!waitingRoomId
-    }
-  });
+  const updatedLobbies = await useDrizzle().update(tables.lobbies).set({
+    namingScheme,
+    entryPointId,
+    waitingRoomId,
+    allowPersonalizedNaming,
+    isPrivate: !!waitingRoomId
+  }).where(eq(tables.lobbies.id, lobbyId)).returning();
+
+  return updatedLobbies[0] || null;
 });
