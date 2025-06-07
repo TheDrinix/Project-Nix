@@ -57,7 +57,7 @@ export default defineEventHandler(async event => {
       allowPersonalizedNaming: allowPersonalizedNaming,
       namingScheme: namingScheme,
       protectedChannelIds: protectedChannelIds
-    }).returning();
+    }).returning().then(lobby => lobby[0]!);
   } catch(e: any) {
     if (e.code === '23505') { // Unique violation error code in PostgreSQL
       throw createError({

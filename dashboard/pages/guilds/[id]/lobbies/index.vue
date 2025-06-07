@@ -14,6 +14,10 @@ const { data, status, error, refresh } = useLazyAsyncData(`lobbies`, () => {
   watch: [guildId],
 });
 
+const lobbies = computed(() => {
+  return lobbyStore.getGuildLobbies(guildId.value);
+})
+
 const refreshLobbies = async () => {
   forceRefresh = true;
 
@@ -34,8 +38,8 @@ const refreshLobbies = async () => {
     </div>
     <USeparator class="my-2" />
     <div v-if="status === 'success'" class="flex flex-col gap-2">
-      <Lobby v-for="lobby in data" v-bind="lobby" :key="lobby.id" />
-      <div v-if="!data?.length" class="text-center text-neutral-500">
+      <Lobby v-for="lobby in lobbies" v-bind="lobby" :key="lobby.id" />
+      <div v-if="!lobbies?.length" class="text-center text-neutral-500">
         There are currently no lobbies in this guild!
       </div>
     </div>

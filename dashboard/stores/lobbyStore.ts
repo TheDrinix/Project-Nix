@@ -42,7 +42,7 @@ export const useLobbyStore = defineStore('lobbies', {
       return res;
     },
     disableLobby(lobbyId: string) {
-      this.lobbies.delete(lobbyId);
+      this.lobbies.delete(lobbyId)
     },
     storeLobby(lobby: Lobby) {
       this.lobbies.set(lobby.id, lobby);
