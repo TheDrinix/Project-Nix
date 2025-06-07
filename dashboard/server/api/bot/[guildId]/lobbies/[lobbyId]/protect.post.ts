@@ -48,10 +48,10 @@ export default defineEventHandler(async event => {
     });
   }
 
-  const protectedChannelIds = lobby.protectedChannelIds;
-  const isProtected = !protectedChannelIds.includes(channelId)
-  if (!isProtected) {
-    protectedChannelIds.filter(id => id !== channelId);
+  let protectedChannelIds = lobby.protectedChannelIds;
+  const isProtected = protectedChannelIds.includes(channelId)
+  if (isProtected) {
+    protectedChannelIds = protectedChannelIds.filter(id => id !== channelId);
   } else {
     protectedChannelIds.push(channelId);
   }
@@ -67,7 +67,7 @@ export default defineEventHandler(async event => {
 
   return {
     lobby: updatedLobby,
-    isProtected,
+    isProtected: !isProtected,
     channelId
   }
 });
