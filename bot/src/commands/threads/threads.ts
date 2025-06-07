@@ -3,7 +3,7 @@ import {
   PermissionFlagsBits,
   InteractionContextType,
 } from 'discord.js';
-import { Command } from 'src/types';
+import { Command } from '../../types';
 
 const command: Command = {
   builder: new SlashCommandBuilder()

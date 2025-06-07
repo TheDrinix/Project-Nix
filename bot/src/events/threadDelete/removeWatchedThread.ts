@@ -1,6 +1,6 @@
 import { ThreadChannel } from 'discord.js';
-import { Event } from 'src/types';
-import api from 'src/utils/api';
+import { Event } from '../../types';
+import api from '../../utils/api';
 
 const event: Event = {
   name: 'removeWatchedThread',

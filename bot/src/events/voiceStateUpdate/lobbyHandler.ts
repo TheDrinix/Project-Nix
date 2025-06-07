@@ -1,6 +1,6 @@
 import { VoiceState } from 'discord.js';
-import { createLobbyChannel, handleLobbyChannelDisconnect } from 'src/utils/lobby';
-import { Event } from 'src/types';
+import { createLobbyChannel, handleLobbyChannelDisconnect } from '../../utils/lobby';
+import { Event } from '../../types';
 
 const event: Event = {
   name: 'lobbyHandler',

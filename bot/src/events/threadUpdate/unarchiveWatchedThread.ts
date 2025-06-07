@@ -1,7 +1,7 @@
 import { Events, ThreadChannel } from 'discord.js';
-import { Event } from 'src/types';
-import { WatchedThread } from 'src/types/api';
-import api from 'src/utils/api';
+import { Event } from '../../types';
+import { WatchedThread } from '../../types/api';
+import api from '../../utils/api';
 
 const event: Event = {
   name: 'unarchiveWatchedThread',

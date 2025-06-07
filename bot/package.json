@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon -e ts,js,json ./src/main.ts",
+    "build": "tsc",
+    "start": "node ./dist/main.js",
     "deploy-commands": "ts-node ./src/deploy-commands.ts"
   },
   "keywords": [],

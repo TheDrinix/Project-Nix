@@ -6,10 +6,10 @@ import {
   SlashCommandSubcommandBuilder,
   VoiceChannel,
 } from 'discord.js';
-import { ApiError, ApiErrorType } from 'src/errors/api';
-import { Subcommand } from 'src/types';
-import { ProtectChannelResponse } from 'src/types/api';
-import api from 'src/utils/api';
+import { ApiError, ApiErrorType } from '../../../errors/api';
+import { Subcommand } from '../../../types';
+import { ProtectChannelResponse } from '../../../types/api';
+import api from '../../../utils/api';
 
 const command: Subcommand = {
   builder: new SlashCommandSubcommandBuilder()

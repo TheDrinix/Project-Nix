@@ -4,8 +4,8 @@ import {
   EmbedBuilder,
   SlashCommandSubcommandBuilder,
 } from 'discord.js';
-import { type Subcommand } from 'src/types';
-import api from 'src/utils/api';
+import { type Subcommand } from '../../../types';
+import api from '../../../utils/api';
 
 const command: Subcommand = {
   builder: new SlashCommandSubcommandBuilder()

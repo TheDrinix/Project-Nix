@@ -6,9 +6,8 @@ import {
   Role,
   MessageFlags,
 } from 'discord.js';
-import { ApiError } from 'src/errors/api';
-import { Subcommand } from 'src/types';
-import api from 'src/utils/api';
+import { Subcommand } from '../../../types';
+import api from '../../../utils/api';
 
 const command: Subcommand = {
   builder: new SlashCommandSubcommandBuilder()

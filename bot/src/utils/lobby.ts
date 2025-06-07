@@ -1,7 +1,7 @@
 import { EmbedBuilder } from "discord.js";
 import { ChannelType, VoiceState } from "discord.js";
 import api from "./api";
-import { Lobby } from "src/types/api";
+import { Lobby } from "../types/api";
 
 async function getLobbyChannelName(lobby: Lobby, username: string, channelCount: number) {
   const name = lobby.namingScheme

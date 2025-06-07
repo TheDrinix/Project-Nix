@@ -7,9 +7,9 @@ import {
   PublicThreadChannel,
   MessageFlags,
 } from 'discord.js';
-import { Subcommand } from 'src/types';
-import api from 'src/utils/api';
-import { type WatchThreadResponse } from 'src/types/api';
+import { Subcommand } from '../../../types';
+import api from '../../../utils/api';
+import { type WatchThreadResponse } from '../../../types/api';
 
 const command: Subcommand = {
   builder: new SlashCommandSubcommandBuilder()

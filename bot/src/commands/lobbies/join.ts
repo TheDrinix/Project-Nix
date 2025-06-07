@@ -6,10 +6,10 @@ import {
   InteractionContextType,
   MessageFlags,
 } from 'discord.js';
-import { ApiError, ApiErrorType } from 'src/errors/api';
-import { Command } from 'src/types';
-import { Lobby } from 'src/types/api';
-import api from 'src/utils/api';
+import { ApiError, ApiErrorType } from '../../errors/api';
+import { Command } from '../../types';
+import { Lobby } from '../../types/api';
+import api from '../../utils/api';
 
 const command: Command = {
   builder: new SlashCommandBuilder()

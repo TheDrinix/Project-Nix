@@ -2,7 +2,7 @@ import { Guild } from "discord.js";
 import { getHttpInstance } from "./http";
 import { CreateLobbyData, Lobby, ProtectChannelResponse, WatchThreadResponse, WatchedThread } from "../types/api";
 import { isAxiosError } from "axios";
-import { ApiError, ApiErrorType } from "src/errors/api";
+import { ApiError, ApiErrorType } from "../errors/api";
 
 class ApiService {
   private _http: ReturnType<typeof getHttpInstance>;
