@@ -18,7 +18,7 @@ const channelName = computed(() => {
 
 <template>
   <div class="text-neutral-800 dark:text-neutral-300">
-    <div class="flex items-center px-2 py-1 rounded hover:bg-neutral-300/80 darK:hover:bg-neutral-800/20 transition-colors">
+    <div class="flex items-center px-2 py-1 rounded hover:bg-neutral-300/80 dark:hover:bg-neutral-700/20 transition-colors">
       <UIcon class="text-lg" name="i-lucide-volume-2" />
       <span class="pl-2 overflow-hidden overflow-ellipsis whitespace-nowrap">{{channelName}}</span>
     </div>

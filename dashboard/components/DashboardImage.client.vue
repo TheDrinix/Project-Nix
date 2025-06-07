@@ -14,7 +14,6 @@ const dashboardScreenshotUrl = computed(() => {
   <NuxtImg
     :src="dashboardScreenshotUrl"
     preload
-    :placeholder="[50, 25]"
     alt="Dashboard Screenshot"
     class="rounded-lg shadow-lg"
   />
