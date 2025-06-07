@@ -10,7 +10,7 @@ const event: Event = {
       status: 'online',
       activities: [
         {
-          name: "---",
+          name: "nix.drinix.xyz",
           type: ActivityType.Playing,
         },
       ],
