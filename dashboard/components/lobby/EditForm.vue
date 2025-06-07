@@ -143,7 +143,7 @@ const handleSubmit = async (event: FormSubmitEvent<FormSchema>) => {
       />
     </UFormField>
 
-    <UFormField label="Naming scheme" name="namingScheme">
+    <UFormField label="Naming scheme" name="namingScheme" description="Usable variables: {user} for username, {p_user} for username with 's and {c} for channel counter">
       <UInput class="w-full" v-model="formState.namingScheme" />
     </UFormField>
 
