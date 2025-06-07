@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import prisma from "~/lib/prisma";
 
 const guildSchema = z.object({
   guildId: z.string(),
@@ -17,10 +16,8 @@ export default defineEventHandler(async event => {
     });
   }
 
-  return prisma.guild.create({
-    data: {
-      id: res.data.guildId,
-      name: res.data.name
-    }
-  });
+  return useDrizzle().insert(tables.guilds).values({
+    id: res.data.guildId,
+    name: res.data.name
+  }).returning().then(rows => rows[0] || null);
 })

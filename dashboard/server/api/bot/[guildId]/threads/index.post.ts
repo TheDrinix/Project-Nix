@@ -1,4 +1,3 @@
-import prisma from "~/lib/prisma";
 import { z } from "zod";
 
 const threadSchema = z.object({
@@ -28,31 +27,30 @@ export default defineEventHandler(async event => {
 
   const { channelId, parentId } = res.data;
 
-  let thread = await prisma.watchedThread.findFirst({
-    where: {
-      guildId,
-      id: channelId,
-    }
+  let thread = await useDrizzle().query.watchedThreads.findFirst({
+    where: and(eq(tables.watchedThreads.guildId, guildId), eq(tables.watchedThreads.id, channelId))
   });
+  let isWatched: boolean;
 
   if (!thread) {
-    thread = await prisma.watchedThread.create({
-      data: {
-        id: channelId,
-        guildId,
-        parentId
-      }
-    });
+    // If thread is not watched, start watching it
+    thread = await useDrizzle().insert(tables.watchedThreads).values({
+      id: channelId,
+      guildId,
+      parentId
+    }).returning().then(rows => rows[0]!);
+
+    isWatched = true;
   } else {
-    prisma.watchedThread.delete({
-      where: {
-        id: channelId
-      }
-    });
+    await useDrizzle().delete(tables.watchedThreads).where(
+      eq(tables.watchedThreads.id, channelId)
+    );
+
+    isWatched = false;
   }
 
   return {
-    watchedThread: thread,
-    isWatched: !thread
+    watchedThread: thread!,
+    isWatched
   }
 });

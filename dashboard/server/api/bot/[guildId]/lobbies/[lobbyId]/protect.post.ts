@@ -1,4 +1,3 @@
-import prisma from "~/lib/prisma";
 import {z} from 'zod';
 
 const protectSchema = z.object({
@@ -21,11 +20,18 @@ export default defineEventHandler(async event => {
 
   const { channelId } = res.data;
 
-  const lobby = await prisma.lobby.findFirst({
-    where: {
-      guildId: guildId,
-      id: lobbyId
-    }
+  if (!guildId || !lobbyId) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Guild or Lobby not Found'
+    });
+  }
+
+  const lobby = await useDrizzle().query.lobbies.findFirst({
+    where: and(
+      eq(tables.lobbies.guildId, guildId),
+      eq(tables.lobbies.id, lobbyId)
+    )
   });
 
   if (!lobby) {
@@ -50,16 +56,14 @@ export default defineEventHandler(async event => {
     protectedChannelIds.push(channelId);
   }
 
-  const updatedLobby = await prisma.lobby.update({
-    where: {
-      id: lobby.id
-    },
-    data: {
-      protectedChannelIds: {
-        set: protectedChannelIds
-      }
-    }
-  });
+  const updatedLobby = await useDrizzle().update(tables.lobbies).set({
+    protectedChannelIds: protectedChannelIds
+  }).where(
+    and(
+      eq(tables.lobbies.guildId, guildId),
+      eq(tables.lobbies.id, lobbyId)
+    )
+  ).returning().then(rows => rows[0]!);
 
   return {
     lobby: updatedLobby,

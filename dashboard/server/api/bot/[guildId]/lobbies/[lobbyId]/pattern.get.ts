@@ -1,4 +1,3 @@
-import prisma from "~/lib/prisma";
 import { z } from "zod";
 
 const querySchema = z.object({
@@ -10,11 +9,18 @@ export default defineEventHandler(async event => {
   const entrypointId = getRouterParam(event, 'lobbyId');
   const query = await getValidatedQuery(event, q => querySchema.parse(q));
 
-  const lobby = await prisma.lobby.findFirst({
-    where: {
-      guildId: guildId,
-      entryPointId: entrypointId
-    }
+  if (!guildId || !entrypointId) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Lobby not Found'
+    });
+  }
+
+  const lobby = await useDrizzle().query.lobbies.findFirst({
+    where: and(
+      eq(tables.lobbies.guildId, guildId),
+      eq(tables.lobbies.entryPointId, entrypointId)
+    )
   });
 
   if (!lobby) {
@@ -27,11 +33,11 @@ export default defineEventHandler(async event => {
   let namingScheme = lobby.namingScheme;
 
   if (lobby.allowPersonalizedNaming && query.userId) {
-    const personalizedScheme = await prisma.personalizedNamingScheme.findFirst({
-      where: {
-        memberId: query.userId,
-        lobbyId: lobby.id
-      }
+    const personalizedScheme = await useDrizzle().query.personalizedNamingSchemes.findFirst({
+      where: and(
+        eq(tables.personalizedNamingSchemes.memberId, query.userId),
+        eq(tables.personalizedNamingSchemes.lobbyId, lobby.id)
+      )
     });
 
     if (personalizedScheme) namingScheme = personalizedScheme.pattern;

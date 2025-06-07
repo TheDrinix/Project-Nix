@@ -1,14 +1,19 @@
-import prisma from "~/lib/prisma";
-
 export default defineEventHandler(async event => {
   const guildId = getRouterParam(event, 'guildId');
   const lobbyId = getRouterParam(event, 'lobbyId');
 
-  const lobby = await prisma.lobby.findFirst({
-    where: {
-      guildId: guildId,
-      entryPointId: lobbyId
-    }
+  if (!guildId || !lobbyId) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Lobby not found'
+    });
+  }
+
+  const lobby = await useDrizzle().query.lobbies.findFirst({
+    where: and(
+      eq(tables.lobbies.guildId, guildId),
+      eq(tables.lobbies.entryPointId, lobbyId)
+    )
   });
 
   if (!lobby) {
@@ -18,10 +23,11 @@ export default defineEventHandler(async event => {
     });
   }
 
-  await prisma.lobby.delete({
-    where: {
-      guildId: guildId,
-      entryPointId: lobbyId
-    }
-  });
+  await useDrizzle().delete(tables.lobbies)
+    .where(
+      and(
+        eq(tables.lobbies.guildId, guildId),
+        eq(tables.lobbies.entryPointId, lobbyId)
+      )
+    );
 });

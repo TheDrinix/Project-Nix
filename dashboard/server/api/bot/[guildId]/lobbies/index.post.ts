@@ -1,4 +1,3 @@
-import prisma from "~/lib/prisma";
 import { z } from "zod";
 
 const lobbySchema = z.object({
@@ -24,10 +23,15 @@ export default defineEventHandler(async event => {
     });
   }
 
-  const guild = await prisma.guild.findFirst({
-    where: {
-      id: guildId
-    }
+  if (!guildId) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Guild not Found'
+    });
+  }
+
+  const guild = await useDrizzle().query.guilds.findFirst({
+    where: eq(tables.guilds.id, guildId)
   });
 
   if (!guild) {
@@ -39,29 +43,25 @@ export default defineEventHandler(async event => {
 
   const { lobbyId, entrypointId, waitingRoomId, allowPersonalizedNaming, namingScheme, protectedChannelIds } = res.data;
 
-  if (await prisma.lobby.findFirst({
-    where: {
-      id: lobbyId
-    }
-  })) {
+  const existingLobby = await useDrizzle().query.lobbies.findFirst({
+    where: eq(tables.lobbies.id, lobbyId)
+  });
+
+  if (existingLobby) {
     throw createError({
       statusCode: 409,
       statusMessage: 'Lobby already exists'
     });
   }
 
-  return prisma.lobby.create({
-    data: {
-      id: lobbyId,
-      entryPointId: entrypointId,
-      guildId: guild.id,
-      isPrivate: !!waitingRoomId,
-      waitingRoomId: waitingRoomId,
-      allowPersonalizedNaming: allowPersonalizedNaming,
-      namingScheme: namingScheme,
-      protectedChannelIds: {
-        set: protectedChannelIds
-      }
-    }
-  });
+  return useDrizzle().insert(tables.lobbies).values({
+    id: lobbyId,
+    entryPointId: entrypointId,
+    guildId: guild.id,
+    isPrivate: !!waitingRoomId,
+    waitingRoomId: waitingRoomId,
+    allowPersonalizedNaming: allowPersonalizedNaming,
+    namingScheme: namingScheme,
+    protectedChannelIds: protectedChannelIds
+  }).returning().then(rows => rows[0]!);
 });

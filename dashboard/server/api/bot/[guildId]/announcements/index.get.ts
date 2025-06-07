@@ -1,6 +1,3 @@
-import { JsonValue } from "@prisma/client/runtime/library";
-import prisma from "~/lib/prisma";
-
 export default defineCachedEventHandler(async (event) => {
   const guildId = getRouterParam(event, 'guildId');
 
@@ -15,10 +12,8 @@ export default defineCachedEventHandler(async (event) => {
     });
   }
 
-  const announcementsConfig = await prisma.announcementsConfig.findFirst({
-    where: {
-      guildId: guildId,
-    },
+  const announcementsConfig = await useDrizzle().query.announcementsConfigs.findFirst({
+    where: eq(tables.announcementsConfigs.guildId, guildId),
   });
 
   if (!announcementsConfig) {
@@ -28,7 +23,7 @@ export default defineCachedEventHandler(async (event) => {
     });
   }
 
-  let res: { messageTemplate: JsonValue; channelId: String | null; } | undefined;
+  let res: { messageTemplate: unknown; channelId: String | null; } | undefined;
 
   switch (selection) {
     case 'join':

@@ -1,30 +1,24 @@
-import prisma from "~/lib/prisma";
-
 export default defineEventHandler(async event => {
   const guildId = getRouterParam(event, 'guildId');
   const lobbyId = getRouterParam(event, 'lobbyId');
   const query = getQuery(event);
 
-  let where: {
-    guildId: string | undefined;
-    id: string | undefined;
-  } | {
-    guildId: string | undefined;
-    entryPointId: string | undefined;
-  };
-  if (query.entrypoint) {
-    where = {
-      guildId: guildId,
-      entryPointId: lobbyId,
-    }
-  } else {
-    where = {
-      guildId: guildId,
-      id: lobbyId,
-    }
+  if (!guildId || !lobbyId) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Lobby not found'
+    });
   }
 
-  const lobby = await prisma.lobby.findFirst({
+  const where = query.entrypoint ? and(
+    eq(tables.lobbies.guildId, guildId),
+    eq(tables.lobbies.entryPointId, lobbyId)
+  ) : and(
+    eq(tables.lobbies.guildId, guildId),
+    eq(tables.lobbies.id, lobbyId)
+  );
+
+  const lobby = await useDrizzle().query.lobbies.findFirst({
     where
   });
 
@@ -36,15 +30,15 @@ export default defineEventHandler(async event => {
   }
 
   if (query.userId && typeof query.userId === 'string') {
-    const personalizedNaming = await prisma.personalizedNamingScheme.findFirst({
-      where: {
-        lobbyId: lobby.id,
-        memberId: query.userId
-      }
+    const personalizedScheme = await useDrizzle().query.personalizedNamingSchemes.findFirst({
+      where: and(
+        eq(tables.personalizedNamingSchemes.memberId, query.userId),
+        eq(tables.personalizedNamingSchemes.lobbyId, lobby.id)
+      )
     });
 
-    if (personalizedNaming) {
-      lobby.namingScheme = personalizedNaming.pattern;
+    if (personalizedScheme) {
+      lobby.namingScheme = personalizedScheme.pattern;
     }
   }
 

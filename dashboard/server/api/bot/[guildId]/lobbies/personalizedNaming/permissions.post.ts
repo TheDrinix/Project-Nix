@@ -1,4 +1,3 @@
-import prisma from "~/lib/prisma";
 import { z } from "zod";
 
 const permissionsSchema = z.object({
@@ -16,10 +15,15 @@ export default defineEventHandler(async event => {
     });
   }
 
-  const guild = await prisma.guild.findFirst({
-    where: {
-      id: guildId
-    }
+  if (!guildId) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Guild not Found'
+    });
+  }
+  
+  const guild = await useDrizzle().query.guilds.findFirst({
+    where: eq(tables.guilds.id, guildId)
   });
 
   if (!guild) {
@@ -31,12 +35,7 @@ export default defineEventHandler(async event => {
 
   const { roleId } = res.data;
 
-  prisma.guild.update({
-    where: {
-      id: guildId
-    },
-    data: {
-      PNRole: roleId
-    }
-  });
+  await useDrizzle().update(tables.guilds).set({
+    PNRole: roleId
+  }).where(eq(tables.guilds.id, guildId));
 })

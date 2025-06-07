@@ -1,12 +1,15 @@
-import prisma from "~/lib/prisma";
-
 export default defineEventHandler(async event => {
   const guildId = getRouterParam(event, 'guildId');
 
-  const guild = await prisma.guild.findFirst({
-    where: {
-      id: guildId
-    }
+  if (!guildId) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Guild not Found'
+    });
+  }
+
+  const guild = await useDrizzle().query.guilds.findFirst({
+    where: eq(tables.guilds.id, guildId)
   });
 
   if (!guild) {

@@ -1,4 +1,3 @@
-import prisma from "~/lib/prisma";
 import { type DiscordGuild } from "~/types/discord";
 
 export default defineEventHandler(async event => {
@@ -30,20 +29,19 @@ export default defineEventHandler(async event => {
 
       query.after = res[res.length - 1]?.id;
 
-      const guilds = await prisma.$transaction(res.map(guild => {
-        return prisma.guild.upsert({
-          where: {
-            id: guild.id
-          },
-          update: {
-            name: guild.name
-          },
-          create: {
+      await useDrizzle().transaction(async (tx) => {
+        for (const guild of res) {
+          await tx.insert(tables.guilds).values({
             id: guild.id,
             name: guild.name
-          }
-        });
-      }));
+          }).onConflictDoUpdate({
+            target: [tables.guilds.id],
+            set: {
+              name: guild.name
+            }
+          });
+        }
+      });
 
       if (res.length < 200) break;
     }
