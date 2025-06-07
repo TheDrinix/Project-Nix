@@ -1,6 +1,6 @@
 # Project Nix 🤖✨
 
-Welcome to Project Nix! This monorepo hosts **Nix**, a versatile Discord bot, and its accompanying **web dashboard** for seamless configuration.
+Welcome to Project Nix! This monorepo hosts **Nix**, a versatile Discord bot, and its accompanying **web dashboard** for seamless configuration. The publicly accessible version of this bot's dashboard can be found at https://nix.drinix.xyz
 
 ## 📜 Overview
 
@@ -40,6 +40,10 @@ The **web dashboard** provides a user-friendly interface to:
     * Enable or disable individually join, leave, and ban announcements.
     * Rich editor for crafting custom embed messages for each announcement type.
 * **User-Friendly Interface:** Built with Nuxt.js 3 and Nuxt UI for a modern and responsive experience.
+
+### Planned features
+* Dashboard page for managing personalized naming schemes for admins.
+* Possibility to set permission level for accessing personalized naming schemes per lobby, also through dashboard
 
 ---
 
@@ -82,7 +86,7 @@ CLIENT_ID=YOUR_DISCORD_APP_CLIENT_ID
 
 # Api URL (depends on where you run your api (dashboard))
 API_URL=YOUR_API_URL
-# Api Key (you generate this yourself)
+# Api Key (you generate this yourself, make sure you use the same key for the api)
 API_KEY=YOUR_API_KEY
 ```
 
@@ -130,38 +134,31 @@ NUXT_BOT_TOKEN=YOUR_BOT_TOKEN
     cd ./bot
     ```
 
-2.  **Set up database schema:**
+2.  **Register bot's slash commands to discord** (Do this step only when needed)
     ```bash
-    pnpx prisma migrate dev
+    pnpm run deploy-commands
     ```
 
 3.  **Run the bot in development mode:**
 
     ```bash
+    # Make sure you're running the dashboard, as the api is required by the bot
     pnpm dev
     ```
 
 4.  **Build the bot for production:**
 
     ```bash
-    # Placeholder: pnpm run build
+    pnpm build
     ```
 
 
 5.  **Run the bot in production:**
 
     ```bash
-    # Placeholder: pnpm run start
+    # Make sure you're running the dashboard, as the api is required by the bot
+    pnpm start
     ```
-
-    *(Please provide the actual command to run the bot in production.)*
-
-#### Key Bot Commands 📝
-
-*(Optional: Add examples of important bot commands here.)*
-
-  * `/lobby create <name>` - ...
-  * `/thread watch <thread_id>` - ...
 
 -----
 
@@ -191,10 +188,6 @@ NUXT_BOT_TOKEN=YOUR_BOT_TOKEN
     ```bash
     node .output/server/index.mjs
     ```
-
-#### Accessing the Dashboard 🌐
-
-*(Provide details on how users access the dashboard, e.g., default URL, login requirements.)*
 
 -----
 
