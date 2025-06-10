@@ -32,15 +32,18 @@ const guild = computed(() => {
 if (!guild.value) {
   await navigateTo('/guilds'); // Redirect if guild is invalid
 } else {
-  await callOnce(() => channelStore.fetchChannels(guildId.value));
+  console.log("Fetching channels for guild:", guildId.value);
+  await callOnce(`channels-${guildId.value}`, () => channelStore.fetchChannels(guildId.value));
 }
 
 watch(guild, async (newGuild) => {
+  console.log("Guild changed:", newGuild);
+
   if (!newGuild) {
     await navigateTo('/guilds'); // Redirect if guild is invalid
   } else {
     // Only fetch channels if the guild is valid
-    await callOnce(() => channelStore.fetchChannels(guildId.value));
+    await callOnce(`channels-${guildId.value}`, () => channelStore.fetchChannels(guildId.value));
   }
 })
 
