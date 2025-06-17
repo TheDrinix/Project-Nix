@@ -201,14 +201,14 @@ Currently, there are no formal contribution guidelines. However, if you're inter
 
 ## 📜 License
 
-This project is licensed under the **MIT License**. See the [LICENSE](https://www.google.com/search?q=LICENSE) file for details.
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
 *(Ensure you add a `LICENSE` file with the MIT License text to your repository root.)*
 
 -----
 
 ## 📞 Contact & Support
 
-If you encounter any issues or have questions, please open an issue on the [GitHub Issues page](https://www.google.com/search?q=https://github.com/your-username/project-nix/issues).
+If you encounter any issues or have questions, please open an issue on the [GitHub Issues page](https://github.com/TheDrinix/Project-Nix/issues).
 
 -----
 
