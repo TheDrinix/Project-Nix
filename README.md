@@ -202,7 +202,6 @@ Currently, there are no formal contribution guidelines. However, if you're inter
 ## 📜 License
 
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
-*(Ensure you add a `LICENSE` file with the MIT License text to your repository root.)*
 
 -----
 
