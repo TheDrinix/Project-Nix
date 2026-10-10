@@ -1,3 +1,10 @@
+import { z } from 'zod';
+import {
+  announcementTypeSchema,
+  botCreateLobbySchema,
+  threadWatchSchema
+} from './schemas';
+
 export interface Lobby {
   id: string;
   entryPointId: string;
@@ -9,15 +16,7 @@ export interface Lobby {
   guildId: string;
 }
 
-export interface CreateLobbyData {
-  lobbyId: string;
-  entrypointId: string;
-  guildId: string;
-  namingScheme: string;
-  allowPersonalizedNaming: boolean;
-  waitingRoomId?: string;
-  protectedChannelIds: string[];
-}
+export type CreateLobbyData = z.infer<typeof botCreateLobbySchema>;
 
 export interface ProtectChannelResponse {
   lobby: Lobby;
@@ -35,3 +34,6 @@ export interface WatchThreadResponse {
   watchedThread: WatchedThread;
   isWatched: boolean;
 }
+
+export type WatchThreadPayload = z.infer<typeof threadWatchSchema>;
+export type AnnouncementType = z.infer<typeof announcementTypeSchema>;

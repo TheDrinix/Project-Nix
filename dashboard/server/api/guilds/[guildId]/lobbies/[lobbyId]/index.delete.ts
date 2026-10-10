@@ -1,35 +1,25 @@
-export default defineEventHandler(async (event) => {
-  const guildId = getRouterParam(event, 'guildId');
+import { useLobbyService } from '~/server/services/lobby.service';
+import { createApiError } from '~/server/utils/apiError';
+import { defineGuildEventHandler } from '~/server/utils/defineGuildEventHandler';
+
+export default defineGuildEventHandler(async ({ event, guildId }) => {
   const lobbyId = getRouterParam(event, 'lobbyId');
 
-  if (!guildId || !lobbyId) {
-    throw createError({
-      message: 'Guild ID and Lobby ID are required',
-      status: 400
+  if (!lobbyId) {
+    throw createApiError({
+      statusCode: 400,
+      message: 'Lobby ID is required'
     });
   }
 
-  const session = await requireUserSession(event);
-
-  if (!session.secure) {
-    throw createError({
-      message: 'Unauthorized',
-      status: 401
-    });
-  }
-
-  await checkUsersGuildPermissions(session.user.discordId, guildId, session.secure.discord.accessToken);
-
-  const lobby = await useDrizzle().query.lobbies.findFirst({
-    where: and(eq(tables.lobbies.id, lobbyId), eq(tables.lobbies.guildId, guildId))
-  });
+  const lobby = await useLobbyService().findByGuildAndId(guildId, lobbyId);
 
   if (!lobby) {
-    throw createError({
+    throw createApiError({
       statusCode: 404,
-      statusMessage: 'Lobby not found'
+      message: 'Lobby not found'
     });
   }
 
-  return useDrizzle().delete(tables.lobbies).where(eq(tables.lobbies.id, lobbyId)).execute();
+  return useLobbyService().deleteById(lobbyId);
 });

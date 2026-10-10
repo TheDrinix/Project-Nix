@@ -1,15 +1,5 @@
-import { DiscordGuild } from '~/types/discord';
+import { getCachedUserGuilds } from '~/server/services/discord-api-client.service';
 
-export const getUserGuilds = defineCachedFunction(async (userId: string, accessToken: string) => {
-  const guilds = await $fetch<DiscordGuild[]>('https://discord.com/api/users/@me/guilds', {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
-  });
-
-  return guilds.filter(guild => guild.owner || ((guild.permissions & 8) === 8));
-}, {
-  maxAge: 15 * 60, // 15 minutes
-  name: 'userGuilds',
-  getKey: (userId: string, accessToken: string) => userId
-});
+export const getUserGuilds = (userId: string, accessToken: string) => {
+  return getCachedUserGuilds(userId, accessToken);
+};

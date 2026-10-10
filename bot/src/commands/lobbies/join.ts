@@ -8,7 +8,7 @@ import {
 } from 'discord.js';
 import { ApiError, ApiErrorType } from '../../errors/api';
 import { Command } from '../../types';
-import { Lobby } from '../../types/api';
+import type { Lobby } from 'shared';
 import api from '../../utils/api';
 
 const command: Command = {

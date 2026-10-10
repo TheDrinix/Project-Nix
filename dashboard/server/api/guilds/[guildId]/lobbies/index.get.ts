@@ -1,17 +1,6 @@
-export default defineEventHandler(async (event) => {
-  await requireUserSession(event);
+import { useLobbyService } from '~/server/services/lobby.service';
+import { defineGuildEventHandler } from '~/server/utils/defineGuildEventHandler';
 
-  const guildId = getRouterParam(event, 'guildId');
-
-  if (!guildId) {
-    throw createError({
-      message: 'Guild ID is required',
-      status: 400
-    });
-  }
-
-  return useDrizzle()
-    .select()
-    .from(tables.lobbies)
-    .where(eq(tables.lobbies.guildId, guildId));
-})
+export default defineGuildEventHandler(async ({ guildId }) => {
+  return useLobbyService().listByGuild(guildId);
+});
