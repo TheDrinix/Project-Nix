@@ -9,7 +9,7 @@ import {
 } from 'discord.js';
 import { Subcommand } from '../../../types';
 import api from '../../../utils/api';
-import { type WatchThreadResponse } from '../../../types/api';
+import type { WatchThreadResponse } from 'shared';
 
 const command: Subcommand = {
   builder: new SlashCommandSubcommandBuilder()

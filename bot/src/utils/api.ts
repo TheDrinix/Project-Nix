@@ -1,6 +1,6 @@
 import { Guild } from "discord.js";
 import { getHttpInstance } from "./http";
-import { CreateLobbyData, Lobby, ProtectChannelResponse, WatchThreadResponse, WatchedThread } from "../types/api";
+import type { CreateLobbyData, Lobby, ProtectChannelResponse, WatchThreadResponse, WatchedThread } from 'shared';
 import { isAxiosError } from "axios";
 import { ApiError, ApiErrorType } from "../errors/api";
 

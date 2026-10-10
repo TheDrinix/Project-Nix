@@ -1,4 +1,5 @@
+import { useGuildService } from '~/server/services/guild.service';
 
-export default defineEventHandler(event => {
-  return useDrizzle().query.guilds.findMany();
-})
+export default defineEventHandler(() => {
+  return useGuildService().list();
+});

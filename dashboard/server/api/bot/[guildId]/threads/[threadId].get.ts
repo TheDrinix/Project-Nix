@@ -1,27 +1,23 @@
+import { useThreadService } from '~/server/services/thread.service';
+import { createApiError } from '~/server/utils/apiError';
+
 export default defineEventHandler(async event => {
   const guildId = getRouterParam(event, 'guildId');
   const threadId = getRouterParam(event, 'threadId');
 
   if (!guildId || !threadId) {
-    throw createError({
+    throw createApiError({
       statusCode: 404,
-      name: "Not found",
-      message: "Thread not found",
+      message: 'Thread not found'
     });
   }
 
-  const thread =  await useDrizzle().query.watchedThreads.findFirst({
-    where: and(
-      eq(tables.watchedThreads.guildId, guildId),
-      eq(tables.watchedThreads.id, threadId)
-    )
-  });
+  const thread = await useThreadService().findByGuildAndThreadId(guildId, threadId);
 
   if (!thread) {
-    throw createError({
+    throw createApiError({
       statusCode: 404,
-      name: "Not found",
-      message: "Thread not found",
+      message: 'Thread not found'
     });
   }
 

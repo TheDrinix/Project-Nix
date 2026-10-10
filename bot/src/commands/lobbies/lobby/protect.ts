@@ -8,7 +8,7 @@ import {
 } from 'discord.js';
 import { ApiError, ApiErrorType } from '../../../errors/api';
 import { Subcommand } from '../../../types';
-import { ProtectChannelResponse } from '../../../types/api';
+import type { ProtectChannelResponse } from 'shared';
 import api from '../../../utils/api';
 
 const command: Subcommand = {

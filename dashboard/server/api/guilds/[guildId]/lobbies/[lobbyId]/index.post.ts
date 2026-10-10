@@ -1,79 +1,50 @@
-import { z } from 'zod';
+import { dashboardCreateLobbySchema } from 'shared';
+import { useGuildService } from '~/server/services/guild.service';
+import { useLobbyService } from '~/server/services/lobby.service';
+import { createApiError, createValidationError } from '~/server/utils/apiError';
+import { defineGuildEventHandler } from '~/server/utils/defineGuildEventHandler';
 
-const createLobbySchema = z.object({
-  entryPointId: z.string(),
-  namingScheme: z.string().min(3).max(50),
-  allowPersonalizedNaming: z.boolean(),
-  protectedChannelIds: z.array(z.string()),
-  waitingRoomId: z.string().nullable(),
-});
-
-export default defineEventHandler(async event => {
-  const guildId = getRouterParam(event, 'guildId');
+export default defineGuildEventHandler(async ({ event, guildId }) => {
   const lobbyId = getRouterParam(event, 'lobbyId');
 
-  if (!guildId || !lobbyId) {
-    throw createError({
-      message: 'Guild ID and Lobby ID are required',
-      status: 400
+  if (!lobbyId) {
+    throw createApiError({
+      statusCode: 400,
+      message: 'Lobby ID is required'
     });
   }
 
-  const res = await readValidatedBody(event, b => createLobbySchema.safeParse(b));
+  const res = await readValidatedBody(event, b => dashboardCreateLobbySchema.safeParse(b));
 
   if (!res.success) {
-    throw createError({
-      statusCode: 400,
-      name: 'Invalid request body',
-      message: res.error.errors.map(err => err.message).join('\n')
-    });
+    throw createValidationError(res.error.errors.map(err => err.message).join('\n'));
   }
 
-  const session = await requireUserSession(event);
-
-  if (!session.secure) {
-    throw createError({
-      message: 'Unauthorized',
-      status: 401
-    });
-  }
-
-  await checkUsersGuildPermissions(session.user.discordId, guildId, session.secure.discord.accessToken);
-
-  const guild = await useDrizzle().query.guilds.findFirst({
-    where: eq(tables.guilds.id, guildId)
-  });
+  const guild = await useGuildService().getById(guildId);
 
   if (!guild) {
-    throw createError({
+    throw createApiError({
       statusCode: 404,
-      statusMessage: 'Guild not Found'
+      message: 'Guild not found'
     });
   }
 
-  const { entryPointId, namingScheme, allowPersonalizedNaming, protectedChannelIds, waitingRoomId } = res.data;
-
-  const existingLobby = await useDrizzle().query.lobbies.findFirst({
-    where: or(
-      eq(tables.lobbies.entryPointId, entryPointId),
-      eq(tables.lobbies.id, lobbyId)
-    )
-  });
+  const existingLobby = await useLobbyService().findConflictingLobby(res.data.entryPointId, lobbyId);
 
   if (existingLobby) {
-    throw createError({
+    throw createApiError({
       statusCode: 409,
-      statusMessage: 'Lobby already exists'
+      message: 'Lobby already exists'
     });
   }
 
-  return useDrizzle().insert(tables.lobbies).values({
+  return useLobbyService().create({
     id: lobbyId,
     guildId,
-    entryPointId,
-    namingScheme,
-    allowPersonalizedNaming,
-    protectedChannelIds: protectedChannelIds.length > 0 ? protectedChannelIds : [],
-    waitingRoomId
+    entryPointId: res.data.entryPointId,
+    namingScheme: res.data.namingScheme,
+    allowPersonalizedNaming: res.data.allowPersonalizedNaming,
+    protectedChannelIds: res.data.protectedChannelIds.length > 0 ? res.data.protectedChannelIds : [],
+    waitingRoomId: res.data.waitingRoomId
   });
 });

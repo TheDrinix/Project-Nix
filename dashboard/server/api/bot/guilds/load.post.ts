@@ -1,57 +1,27 @@
-import { type DiscordGuild } from "~/types/discord";
+import { useDiscordApiClient } from '~/server/services/discord-api-client.service';
+import { useGuildService } from '~/server/services/guild.service';
 
-export default defineEventHandler(async event => {
-  const config = useRuntimeConfig();
-  const botToken = config.botToken;
+export default defineEventHandler(async () => {
+  const discordApiClient = useDiscordApiClient();
+  const guildService = useGuildService();
 
-  if (!botToken) { 
-    throw createError({
-      message: 'Bot token is not defined',
-      status: 500
-    });
-  }
+  let after: string | undefined;
 
-  try {
-    const query: {
-      limit: number,
-      after?: string
-    } = {
-      limit: 200
+  while (true) {
+    const guilds = await discordApiClient.getBotGuildsPage(after, 200);
+
+    if (guilds.length === 0) {
+      break;
     }
 
-    while (true) {
-      const res = await $fetch<DiscordGuild[]>('https://discord.com/api/users/@me/guilds', {
-        headers: {
-          Authorization: `Bot ${botToken}`
-        },
-        query
-      });
+    await guildService.upsertMany(guilds);
 
-      query.after = res[res.length - 1]?.id;
+    after = guilds[guilds.length - 1]?.id;
 
-      await useDrizzle().transaction(async (tx) => {
-        for (const guild of res) {
-          await tx.insert(tables.guilds).values({
-            id: guild.id,
-            name: guild.name
-          }).onConflictDoUpdate({
-            target: [tables.guilds.id],
-            set: {
-              name: guild.name
-            }
-          });
-        }
-      });
-
-      if (res.length < 200) break;
+    if (guilds.length < 200) {
+      break;
     }
-  } catch (e: any) {
-    console.error(e);
-
-    throw createError({
-      name: 'Failed to load guilds',
-      message: e.message,
-      status: 500
-    });
   }
-}); 
+
+  return { ok: true };
+});

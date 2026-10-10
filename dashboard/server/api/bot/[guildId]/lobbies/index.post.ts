@@ -1,67 +1,50 @@
-import { z } from "zod";
-
-const lobbySchema = z.object({
-  lobbyId: z.string(),
-  entrypointId: z.string(),
-  guildId: z.string(),
-  waitingRoomId: z.string().optional(),
-  allowPersonalizedNaming: z.boolean(),
-  namingScheme: z.string().min(3).max(50),
-  protectedChannelIds: z.array(z.string())
-});
+import { botCreateLobbySchema } from 'shared';
+import { useGuildService } from '~/server/services/guild.service';
+import { useLobbyService } from '~/server/services/lobby.service';
+import { createApiError, createValidationError } from '~/server/utils/apiError';
 
 export default defineEventHandler(async event => {
   const guildId = getRouterParam(event, 'guildId');
-
-  const res = await readValidatedBody(event, b => lobbySchema.safeParse(b));
+  const res = await readValidatedBody(event, body => botCreateLobbySchema.safeParse(body));
 
   if (!res.success) {
-    throw createError({
-      statusCode: 400,
-      name: 'Invalid request body',
-      message: res.error.errors.map(err => err.message).join('\n')
-    });
+    throw createValidationError(res.error.errors.map(err => err.message).join('\n'));
   }
 
   if (!guildId) {
-    throw createError({
+    throw createApiError({
       statusCode: 404,
-      statusMessage: 'Guild not Found'
+      message: 'Guild not found'
     });
   }
 
-  const guild = await useDrizzle().query.guilds.findFirst({
-    where: eq(tables.guilds.id, guildId)
-  });
+  const guild = await useGuildService().getById(guildId);
 
   if (!guild) {
-    throw createError({
+    throw createApiError({
       statusCode: 404,
-      statusMessage: 'Guild not Found'
+      message: 'Guild not found'
     });
   }
 
   const { lobbyId, entrypointId, waitingRoomId, allowPersonalizedNaming, namingScheme, protectedChannelIds } = res.data;
 
-  const existingLobby = await useDrizzle().query.lobbies.findFirst({
-    where: eq(tables.lobbies.id, lobbyId)
-  });
+  const existingLobby = await useLobbyService().findById(lobbyId);
 
   if (existingLobby) {
-    throw createError({
+    throw createApiError({
       statusCode: 409,
-      statusMessage: 'Lobby already exists'
+      message: 'Lobby already exists'
     });
   }
 
-  return useDrizzle().insert(tables.lobbies).values({
+  return useLobbyService().create({
     id: lobbyId,
     entryPointId: entrypointId,
     guildId: guild.id,
-    isPrivate: !!waitingRoomId,
-    waitingRoomId: waitingRoomId,
-    allowPersonalizedNaming: allowPersonalizedNaming,
-    namingScheme: namingScheme,
-    protectedChannelIds: protectedChannelIds
-  }).returning().then(rows => rows[0]!);
+    waitingRoomId,
+    allowPersonalizedNaming,
+    namingScheme,
+    protectedChannelIds
+  });
 });

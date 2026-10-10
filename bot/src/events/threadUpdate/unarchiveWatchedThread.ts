@@ -1,6 +1,6 @@
 import { Events, ThreadChannel } from 'discord.js';
 import { Event } from '../../types';
-import { WatchedThread } from '../../types/api';
+import type { WatchedThread } from 'shared';
 import api from '../../utils/api';
 
 const event: Event = {

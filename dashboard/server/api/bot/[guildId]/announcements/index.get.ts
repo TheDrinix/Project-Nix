@@ -1,71 +1,51 @@
-export default defineCachedEventHandler(async (event) => {
+import { announcementTypeSchema } from 'shared';
+import { useAnnouncementService } from '~/server/services/announcement.service';
+import { createApiError } from '~/server/utils/apiError';
+
+export default defineCachedEventHandler(async event => {
   const guildId = getRouterParam(event, 'guildId');
-
   const query = getQuery(event);
-
-  const selection = query.select;
+  const selection = announcementTypeSchema.safeParse(query.select);
 
   if (!guildId) {
-    return createError({
+    throw createApiError({
       statusCode: 400,
-      statusMessage: 'Missing guildId',
+      message: 'Missing guildId'
     });
   }
 
-  const announcementsConfig = await useDrizzle().query.announcementsConfigs.findFirst({
-    where: eq(tables.announcementsConfigs.guildId, guildId),
-  });
-
-  if (!announcementsConfig) {
-    return createError({
-      statusCode: 404,
-      statusMessage: 'Announcements config not found',
+  if (!selection.success) {
+    throw createApiError({
+      statusCode: 400,
+      message: 'Invalid announcement selection'
     });
   }
 
-  let res: { messageTemplate: unknown; channelId: String | null; } | undefined;
+  const config = await useAnnouncementService().getByGuildId(guildId);
 
-  switch (selection) {
-    case 'join':
-      if (announcementsConfig.announceJoin) {
-        res = {
-          messageTemplate: announcementsConfig.joinMessageEmbed,
-          channelId: announcementsConfig.channelId
-        }
-      }
-      break;
-    case 'leave':
-      if (announcementsConfig.announceLeave) {
-        res = {
-          messageTemplate: announcementsConfig.leaveMessageEmbed,
-          channelId: announcementsConfig.channelId
-        }
-      }
-      break;
-    case 'ban':
-      if (announcementsConfig.announceBan) {
-        res = {
-          messageTemplate: announcementsConfig.banMessageEmbed,
-          channelId: announcementsConfig.channelId
-        }
-      }
-      break;
-  }
-
-  if (!res) {
-    throw createError({
+  if (!config) {
+    throw createApiError({
       statusCode: 404,
-      statusMessage: 'Announcements config not found',
-    })
+      message: 'Announcements config not found'
+    });
   }
 
-  return res;
+  const result = useAnnouncementService().getSelection(config, selection.data);
+
+  if (!result) {
+    throw createApiError({
+      statusCode: 404,
+      message: 'Announcements config not found'
+    });
+  }
+
+  return result;
 }, {
   maxAge: 6 * 60 * 60,
   name: 'guild-announcements-config',
-  getKey: (event) => {
+  getKey: event => {
     const guildId = getRouterParam(event, 'guildId');
     const query = getQuery(event) ?? '';
     return `${guildId}-${query.select}`;
   }
-})
+});

@@ -1,74 +1,50 @@
-import { z } from 'zod';
+import { botCreateLobbySchema } from 'shared';
+import { useGuildService } from '~/server/services/guild.service';
+import { useLobbyService } from '~/server/services/lobby.service';
+import { createApiError, createValidationError, isDatabaseUniqueViolation } from '~/server/utils/apiError';
+import { defineGuildEventHandler } from '~/server/utils/defineGuildEventHandler';
 
-const lobbySchema = z.object({
-  lobbyId: z.string().nonempty(),
-  entrypointId: z.string().nonempty(),
-  waitingRoomId: z.string().nullable(),
-  allowPersonalizedNaming: z.boolean().default(false),
-  namingScheme: z.string().min(3).max(50),
-  protectedChannelIds: z.array(z.string().nonempty()),
-});
-
-export default defineEventHandler(async event => {
-  const guildId = getRouterParam(event, 'guildId');
-
-  if (!guildId) {
-    throw createError({
-      message: 'Guild ID is required',
-      status: 400
-    });
-  }
-
-  const res = await readValidatedBody(event, b => lobbySchema.safeParse(b));
+export default defineGuildEventHandler(async ({ event, guildId }) => {
+  const res = await readValidatedBody(event, b => botCreateLobbySchema.safeParse(b));
 
   if (!res.success) {
-    console.log(res.error.errors);
-
-    throw createError({
-      statusCode: 400,
-      name: 'Invalid request body',
-      message: res.error.errors.map(err => `${err.path.join(', ')} => ${err.message}`).join('\n'),
-    });
+    throw createValidationError(
+      res.error.errors.map(err => `${err.path.join(', ')} => ${err.message}`).join('\n')
+    );
   }
 
-  const guild = await useDrizzle()
-    .query
-    .guilds
-    .findFirst({
-      where: eq(tables.guilds.id, guildId)
-    });
+  const guild = await useGuildService().getById(guildId);
 
   if (!guild) {
-    throw createError({
+    throw createApiError({
       statusCode: 404,
-      statusMessage: 'Guild not Found'
+      message: 'Guild not found'
     });
   }
 
   try {
     const { lobbyId, entrypointId, waitingRoomId, allowPersonalizedNaming, namingScheme, protectedChannelIds } = res.data;
 
-    return useDrizzle().insert(tables.lobbies).values({
+    return useLobbyService().create({
       id: lobbyId,
-      entryPointId: entrypointId,
       guildId: guild.id,
-      isPrivate: !!waitingRoomId,
-      waitingRoomId: waitingRoomId,
-      allowPersonalizedNaming: allowPersonalizedNaming,
-      namingScheme: namingScheme,
-      protectedChannelIds: protectedChannelIds
-    }).returning().then(lobby => lobby[0]!);
-  } catch(e: any) {
-    if (e.code === '23505') { // Unique violation error code in PostgreSQL
-      throw createError({
+      entryPointId: entrypointId,
+      waitingRoomId,
+      allowPersonalizedNaming,
+      namingScheme,
+      protectedChannelIds
+    });
+  } catch (error) {
+    if (isDatabaseUniqueViolation(error)) {
+      throw createApiError({
         statusCode: 409,
-        statusMessage: 'Lobby already exists'
+        message: 'Lobby already exists'
       });
     }
 
-    throw createError({
+    throw createApiError({
       statusCode: 500,
-      statusMessage: 'Internal Server Error'
+      message: 'Internal server error'
     });
   }
-})
+});
